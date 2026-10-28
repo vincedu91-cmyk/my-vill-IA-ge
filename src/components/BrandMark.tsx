@@ -1,0 +1,21 @@
+import type { SVGProps } from 'react';
+
+export function BrandMark(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 256 256" fill="none" aria-hidden="true" focusable="false" {...props}>
+      <g stroke="currentColor" strokeLinecap="round" strokeWidth="10">
+        <path d="M128 128 128 34M128 128 201 69M128 128 219 152M128 128 175 209M128 128 90 213M128 128 37 152M128 128 52 72" />
+      </g>
+      <g fill="currentColor">
+        <circle cx="128" cy="34" r="14" />
+        <circle cx="201" cy="69" r="14" />
+        <circle cx="219" cy="152" r="14" />
+        <circle cx="175" cy="209" r="14" />
+        <circle cx="90" cy="213" r="14" />
+        <circle cx="37" cy="152" r="14" />
+        <circle cx="52" cy="72" r="14" />
+      </g>
+      <rect x="106" y="106" width="44" height="44" rx="8" fill="var(--red)" transform="rotate(45 128 128)" />
+    </svg>
+  );
+}

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f2f0">
+    <title>Village MKD — pistes de logo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #f3f2f0;
+        --surface: #fff;
+        --ink: #232222;
+        --muted: #69645f;
+        --line: #d9d5d0;
+        --red: #c21b17;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--page);
+        color: var(--ink);
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+      }
+      main { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 54px 0 64px; }
+      header { margin-bottom: 30px; }
+      .eyebrow { color: var(--red); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+      h1 { margin: 10px 0 8px; font-size: clamp(30px, 5vw, 46px); letter-spacing: -.045em; }
+      .intro { max-width: 720px; margin: 0; color: var(--muted); line-height: 1.65; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+      article {
+        min-width: 0;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+      }
+      article:last-child { grid-column: 1 / -1; }
+      .top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+      .number { color: var(--red); font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+      h2 { margin: 0; font-size: 19px; }
+      .mark { display: block; width: 100%; height: auto; margin: 8px 0 4px; }
+      .note { min-height: 48px; margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+      .tag { display: inline-block; margin-top: 12px; padding: 5px 8px; border-radius: 4px; background: #f7e4e3; color: #8d1815; font-size: 11px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+      footer { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.6; }
+      @media (max-width: 680px) {
+        main { width: min(100% - 24px, 520px); padding-top: 32px; }
+        .grid { grid-template-columns: 1fr; }
+        article:last-child { grid-column: auto; }
+        article { padding: 16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">Explorations · identité de marque</div>
+        <h1>Village MKD</h1>
+        <p class="intro">Cinq pistes de logo pour un collectif d’agents IA qui travaille en village et laisse la validation finale à une personne. Les formes sont dessinées pour rester lisibles en petit et en monochrome.</p>
+      </header>
+      <section class="grid" aria-label="Cinq propositions de logo">
+        <article>
+          <div class="top"><span class="number">01</span><h2>Archipel humain</h2></div>
+          <img class="mark" src="01-archipel.svg" alt="Sept îlots reliés autour d'un centre de validation.">
+          <p class="note">Sept fonctions réunies autour d’un point de décision humain. Le système le plus directement lié à la carte du produit.</p>
+          <span class="tag">Réseau · collectif</span>
+        </article>
+        <article>
+          <div class="top"><span class="number">02</span><h2>Le pont</h2></div>
+          <img class="mark" src="02-le-pont.svg" alt="Deux îles réunies par une passerelle rouge avec un repère central.">
+          <p class="note">Deux îles reliées par une passerelle rouge avec un repère au centre : le passage entre production et validation.</p>
+          <span class="tag">Lien · passage</span>
+        </article>
+        <article>
+          <div class="top"><span class="number">03</span><h2>La mairie ouverte</h2></div>
+          <img class="mark" src="03-la-mairie.svg" alt="Un bâtiment stylisé avec une porte rouge ouverte.">
+          <p class="note">Un lieu commun identifiable, avec une entrée ouverte et un repère rouge pour l’étape de revue humaine.</p>
+          <span class="tag">Lieu · confiance</span>
+        </article>
+        <article>
+          <div class="top"><span class="number">04</span><h2>Monogramme VM</h2></div>
+          <img class="mark" src="04-monogramme-vm.svg" alt="Les lettres V et M réunies par une barre rouge.">
+          <p class="note">Une signature compacte issue des initiales, pensée pour l’icône d’application et les emplacements très étroits.</p>
+          <span class="tag">Initiales · icône</span>
+        </article>
+        <article>
+          <div class="top"><span class="number">05</span><h2>La place commune</h2></div>
+          <img class="mark" src="05-la-place.svg" alt="Sept petites maisons disposées autour d'une place centrale.">
+          <p class="note">Une place entourée de sept abris : l’idée d’un village où chaque spécialité contribue à une même production.</p>
+          <span class="tag">Village · coopération</span>
+        </article>
+      </section>
+      <footer>
+        Pistes de travail, pas encore un logo final. Les wordmarks utilisent une police système à ce stade. Choisis une piste (ou un détail à combiner) et je la pousserai en versions finales.
+      </footer>
+    </main>
+  </body>
+</html>

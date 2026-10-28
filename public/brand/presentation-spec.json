@@ -1,0 +1,42 @@
+{
+  "brand": "Village MKD",
+  "tagline": "Des agents IA, une validation humaine.",
+  "brief": "Une interface de travail où quinze agents IA avancent sur sept îles spécialisées; une personne garde le dernier mot sur chaque livrable.",
+  "adjectives": ["collaboratif", "clair", "supervisé"],
+  "criteria": "Le symbole doit rester lisible en favicon, se reproduire en une couleur et faire sentir le collectif sans masquer la validation humaine.",
+  "industry": "software",
+  "mockups": ["website", "app-icon", "favicon-tab", "readme", "terminal", "sticker"],
+  "nav": ["Village", "Journal", "Cerveau", "Équipe"],
+  "brand_color": "#c21b17",
+  "tile_color": "#f3f2f0",
+  "greyscale": false,
+  "final": true,
+  "round": 1,
+  "concepts": [
+    {
+      "name": "Archipel humain",
+      "symbol": "logo-symbol.svg",
+      "lockup": "logo-horizontal.svg",
+      "stacked": "logo-stacked.svg",
+      "avatar": "logo-symbol-app-icon.svg",
+      "symbol_on_tile": "logo-symbol.svg",
+      "lockup_on_tile": "logo-horizontal.svg",
+      "stacked_on_tile": "logo-stacked.svg",
+      "symbol_on_dark": "logo-symbol-white.svg",
+      "lockup_on_dark": "logo-horizontal-white.svg",
+      "stacked_on_dark": "logo-stacked-white.svg",
+      "idea": "Sept équipes convergent vers un losange rouge qui représente le point de validation humain.",
+      "rationale": [
+        "Les sept nœuds reprennent la structure réelle du village.",
+        "Le losange rouge conserve l’accent déjà présent dans l’interface.",
+        "Une version simplifiée retire les rayons fins pour les favicons."
+      ]
+    }
+  ],
+  "recommendation": "Garder l’archipel humain comme signature principale: il relie les équipes sans transformer le produit en simple robot ou en bâtiment générique.",
+  "next_steps": [
+    "Décliner la signature horizontale, empilée et symbole seul.",
+    "Vérifier les tailles d’icône et les fonds clairs/sombres.",
+    "Faire une recherche d’antériorité avant tout usage public."
+  ]
+}

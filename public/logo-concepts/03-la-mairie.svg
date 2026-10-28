@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Village MKD — La mairie ouverte</title>
+  <desc id="desc">Un portail ouvert marque le lieu où l'humain examine et valide le travail.</desc>
+  <path d="M48 151V92l64-47 64 47v59h-28V99l-36-27-36 27v52z" fill="#232222"/>
+  <path d="M96 151v-35a16 16 0 0 1 32 0v35z" fill="#c21b17"/>
+  <path d="M42 158h140v12H42z" fill="#232222"/>
+  <circle cx="155" cy="65" r="10" fill="#c21b17"/>
+  <text x="230" y="119" fill="#232222" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="-2">Village</text>
+  <text x="446" y="119" fill="#c21b17" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="-2">MKD</text>
+  <text x="234" y="157" fill="#69645f" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="2">AGENTS IA · VALIDATION HUMAINE</text>
+</svg>

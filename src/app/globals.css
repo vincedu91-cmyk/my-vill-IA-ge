@@ -1,0 +1,343 @@
+@import "tailwindcss";
+/* liquid-glass-react s'appuie sur des classes Tailwind (bg-black, opacity-0…). */
+@source "../../node_modules/liquid-glass-react/dist";
+
+:root {
+  color-scheme: light;
+  --page: #f3f2f0;
+  --surface: #ffffff;
+  --ink: #232222;
+  --muted: #69645f;
+  --line: #d9d5d0;
+  --frame: #323232;
+  --red: #c21b17;
+  --on-red: #ffffff;
+  --red-soft: #f7e4e3;
+  --success: #2c7a4b;
+  --warning: #b45309;
+  --sky-top: #86c3ec;
+  --sky-bottom: #e2f1fa;
+  --glass: rgb(255 255 255 / 0.66);
+  --glass-strong: rgb(255 255 255 / 0.86);
+  --glass-tint: rgb(255 255 255 / 0.5);
+  --glass-edge: rgb(255 255 255 / 0.75);
+  --glass-shadow: 0 12px 40px rgb(20 32 60 / 0.18), 0 2px 6px rgb(20 32 60 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #181717;
+    --surface: #242222;
+    --ink: #efecea;
+    --muted: #a8a29e;
+    --line: #3b3837;
+    --frame: #0f0e0e;
+    --red: #e5504b;
+    --on-red: #1b0b0a;
+    --red-soft: #3a2120;
+    --success: #6fc08f;
+    --warning: #f0b45b;
+    --sky-top: #16233b;
+    --sky-bottom: #33486b;
+    --glass: rgb(30 28 28 / 0.66);
+    --glass-strong: rgb(40 38 37 / 0.9);
+    --glass-tint: rgb(24 23 23 / 0.5);
+    --glass-edge: rgb(255 255 255 / 0.1);
+    --glass-shadow: 0 12px 40px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #181717;
+  --surface: #242222;
+  --ink: #efecea;
+  --muted: #a8a29e;
+  --line: #3b3837;
+  --frame: #0f0e0e;
+  --red: #e5504b;
+  --on-red: #1b0b0a;
+  --red-soft: #3a2120;
+  --success: #6fc08f;
+  --warning: #f0b45b;
+  --sky-top: #16233b;
+  --sky-bottom: #33486b;
+  --glass: rgb(30 28 28 / 0.66);
+  --glass-strong: rgb(40 38 37 / 0.9);
+  --glass-tint: rgb(24 23 23 / 0.5);
+  --glass-edge: rgb(255 255 255 / 0.1);
+  --glass-shadow: 0 12px 40px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-frame: var(--frame);
+  --color-red: var(--red);
+  --color-on-red: var(--on-red);
+  --color-red-soft: var(--red-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-glass-strong: var(--glass-strong);
+  --font-sans: var(--font-roboto), "Roboto", system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* Verre CSS pour les surfaces de hauteur variable (panneaux, cartes). */
+  .glass-panel {
+    background: var(--glass);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(22px) saturate(170%);
+  }
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass-panel {
+      background: var(--glass-strong);
+    }
+  }
+
+  /* Contenu des pilules liquid-glass : neutralise la typo imposée par la bibliothèque. */
+  .glass-pill-body {
+    display: flex;
+    align-items: center;
+    background: var(--glass-tint);
+    color: var(--ink);
+    font: 400 0.875rem/1.4 var(--font-sans);
+    text-shadow: none;
+  }
+  .glass-pill-body :focus-visible {
+    outline-offset: -2px;
+  }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--glass-strong);
+    color: var(--ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+    transition: transform 120ms ease, background-color 120ms ease;
+    cursor: pointer;
+  }
+  .btn:hover:not(:disabled) {
+    background: var(--surface);
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--on-red);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--red) 86%, black);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 1.75rem;
+    padding: 0.15rem 0.65rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--glass-strong);
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .chip:hover {
+    background: var(--surface);
+  }
+  .chip[aria-pressed="true"] {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--surface);
+  }
+
+  .tab {
+    display: inline-flex;
+    align-items: center;
+    height: 2rem;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+  }
+  .tab:hover {
+    background: var(--glass-strong);
+  }
+  .tab[aria-pressed="true"],
+  .tab[aria-selected="true"] {
+    background: var(--surface);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.14);
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .icon-btn:hover {
+    background: var(--glass-strong);
+  }
+
+  .scene {
+    background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  }
+  .scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .vlabel,
+  .vbubble,
+  .vname {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .vlabel {
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: rgb(255 255 255 / 0.92);
+    color: #323232;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .vlabel-mairie {
+    background: #c21b17;
+    color: #ffffff;
+  }
+  .vlabel-brain {
+    background: #6d28d9;
+    color: #ffffff;
+  }
+  .vlabel-cafe {
+    background: #8a5a3c;
+    color: #ffffff;
+  }
+  .vbubble {
+    max-width: 160px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #232222;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: normal;
+    width: max-content;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.18);
+    margin-top: -6px;
+  }
+  .vbubble-raised {
+    margin-top: -30px;
+  }
+  .vname {
+    padding: 1px 7px;
+    border-radius: 3px;
+    background: #c21b17;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .vbubble[hidden],
+  .vname[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    .vlabel {
+      font-size: 9px;
+      padding: 1px 5px;
+    }
+    .vbubble {
+      font-size: 10px;
+      max-width: 120px;
+    }
+    .vname {
+      font-size: 9px;
+    }
+  }
+
+  .note-flash {
+    animation: note-flash 1.3s ease-out;
+  }
+}
+
+@keyframes note-flash {
+  from {
+    background: rgb(139 92 246 / 0.3);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .tab {
+    transition: none;
+  }
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
+}

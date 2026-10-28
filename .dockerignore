@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.agents
+.playwright-mcp
+shots
+coverage
+Dockerfile
+.dockerignore
+npm-debug.log*
+.env*

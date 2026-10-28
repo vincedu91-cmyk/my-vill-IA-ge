@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" role="img" aria-labelledby="title desc">
+  <title id="title">Village MKD — La place commune</title>
+  <desc id="desc">Une place centrale accueille sept maisons-abris stylisées.</desc>
+  <g fill="#232222">
+    <path d="M45 86 64 69l19 17v25H45z"/>
+    <path d="m85 49 19-17 19 17v25H85z"/>
+    <path d="m134 71 19-17 19 17v25h-38z"/>
+    <path d="m150 119 19-17 19 17v25h-38z"/>
+    <path d="m118 158 19-17 19 17v25h-38z"/>
+    <path d="m69 158 19-17 19 17v25H69z"/>
+    <path d="m31 124 19-17 19 17v25H31z"/>
+  </g>
+  <circle cx="105" cy="119" r="23" fill="#c21b17"/>
+  <circle cx="105" cy="119" r="8" fill="#fff"/>
+  <text x="230" y="119" fill="#232222" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="-2">Village</text>
+  <text x="446" y="119" fill="#c21b17" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="700" letter-spacing="-2">MKD</text>
+  <text x="234" y="157" fill="#69645f" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="2">AGENTS IA · VALIDATION HUMAINE</text>
+</svg>
