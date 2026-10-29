@@ -1,11 +1,13 @@
 import type { AgentId, DeptKey } from "./types";
 import profiles from "./agent-profiles.json";
+import { mkdNote, villageNote } from "./quartiers";
 
 export interface Agent {
   id: AgentId;
   name: string;
   role: string;
-  dept: DeptKey;
+  /** null : rôle rattaché au village, hors de tout quartier. */
+  dept: DeptKey | null;
   manager: boolean;
   human: boolean;
   tools: readonly string[];
@@ -94,7 +96,7 @@ type Row = [
   AgentId,
   string,
   string,
-  DeptKey,
+  DeptKey | null,
   boolean,
   string,
   string,
@@ -105,10 +107,10 @@ type Row = [
 
 const ROWS: readonly Row[] = [
   [
-    "camille",
-    "Camille",
-    "Cheffe de projet",
-    "mairie",
+    "adeline",
+    "Adeline",
+    "Responsable Expériences Digitales",
+    "direction",
     true,
     "Read, Write, Grep",
     "Reçoit les briefs, répartit le travail entre départements et assemble le livrable final.",
@@ -119,11 +121,11 @@ const ROWS: readonly Row[] = [
   [
     "vincent",
     "Vincent",
-    "Directeur de projet (toi)",
-    "mairie",
+    "Fondateur de la plateforme et validateur suprême",
+    null,
     false,
     "",
-    "Valide chaque livrable avant diffusion. Aucun agent ne publie sans son accord.",
+    "Valide chaque livrable avant diffusion, dans tous les quartiers du village. Aucun agent ne publie sans son accord.",
     1,
     0,
     false,
@@ -132,7 +134,7 @@ const ROWS: readonly Row[] = [
     "nina",
     "Nina",
     "Responsable croissance & acquisition",
-    "mairie",
+    "direction",
     false,
     "Read, Write, WebSearch, WebFetch",
     "Relie acquisition, mesure et conversion ; formule des tests mesurables et distingue les faits des hypothèses.",
@@ -141,8 +143,8 @@ const ROWS: readonly Row[] = [
     true,
   ],
   [
-    "lea",
-    "Léa",
+    "juliette",
+    "Juliette",
     "Responsable contenu",
     "contenu",
     true,
@@ -177,22 +179,22 @@ const ROWS: readonly Row[] = [
     true,
   ],
   [
-    "noe",
-    "Noé",
-    "Directeur artistique",
-    "creation",
+    "virginie",
+    "Virginie",
+    "Responsable Agence Interne",
+    "agence",
     true,
     "Read, Write",
     "Traduit le brief en direction visuelle conforme à Red Studio 2.0.",
     4,
     4,
-    false,
+    true,
   ],
   [
     "sofia",
     "Sofia",
     "Designer slides et carrousels",
-    "creation",
+    "agence",
     false,
     "Read, Write, Bash",
     "Compose les mises en page à partir de la direction visuelle.",
@@ -204,7 +206,7 @@ const ROWS: readonly Row[] = [
     "malo",
     "Malo",
     "Motion designer",
-    "creation",
+    "agence",
     false,
     "Read, Write, Bash",
     "Anime les contenus vidéo et les tutoriels.",
@@ -213,16 +215,16 @@ const ROWS: readonly Row[] = [
     false,
   ],
   [
-    "zoe",
-    "Zoé",
+    "francois",
+    "François",
     "Responsable veille et analyse",
     "veille",
     true,
     "Read, Write, WebSearch",
-    "Cadre les analyses et synthétise les résultats pour la cheffe de projet.",
+    "Cadre les analyses et synthétise les résultats pour la responsable Expériences Digitales.",
     2,
     1,
-    true,
+    false,
   ],
   [
     "jules",
@@ -237,22 +239,10 @@ const ROWS: readonly Row[] = [
     false,
   ],
   [
-    "maya",
-    "Maya",
-    "Analyste CX/UX",
-    "veille",
-    false,
-    "Read, Write, Bash",
-    "Analyse le parcours d’inscription, étaye et priorise ses frictions ; recommande les évolutions UX.",
-    4,
-    4,
-    true,
-  ],
-  [
     "theo",
     "Théo",
     "Lead dev",
-    "dev",
+    "design",
     true,
     "Read, Write, Edit, Bash",
     "Cadre l'architecture (Symfony, Next.js), répartit le code et gère les dépôts GitHub/GitLab : branches, commits, push, pull requests et merge requests, avec validation humaine avant fusion.",
@@ -264,7 +254,7 @@ const ROWS: readonly Row[] = [
     "adrien",
     "Adrien",
     "Développeur Senior Backend & Fullstack SSR",
-    "dev",
+    "design",
     false,
     "Read, Write, Edit, Bash",
     "Implémente, maintient et fiabilise les fonctionnalités serveur en PHP/Symfony et Next.js SSR ou hybride. Prend en charge la logique métier, les flux de données et les intégrations REST ; utilise Docker pour rendre les environnements de développement reproductibles. Optimise les requêtes et les accès aux bases de données à partir de mesures, et couvre les comportements critiques par des tests automatisés unitaires et d’intégration.",
@@ -276,7 +266,7 @@ const ROWS: readonly Row[] = [
     "lola",
     "Lola",
     "Développeuse front",
-    "dev",
+    "design",
     false,
     "Read, Write, Edit, Bash",
     "Conçoit et implémente en React, Next.js et Tailwind les interfaces d’inscription à partir des besoins UX et maquettes approuvées.",
@@ -288,13 +278,25 @@ const ROWS: readonly Row[] = [
     "sacha",
     "Sacha",
     "Revue de code et QA",
-    "dev",
+    "design",
     false,
     "Read, Grep, Bash",
     "Relit le code, lance les tests et bloque ce qui ne passe pas.",
     2,
     2,
     false,
+  ],
+  [
+    "marie",
+    "Marie",
+    "Analyste CX/UX",
+    "design",
+    false,
+    "Read, Write, Bash",
+    "Analyse le parcours d’inscription, étaye et priorise ses frictions ; recommande les évolutions UX.",
+    4,
+    4,
+    true,
   ],
   [
     "paul",
@@ -323,33 +325,122 @@ const ROWS: readonly Row[] = [
 ];
 
 const SKILLS_BY_AGENT: Record<AgentId, readonly AgentSkill[]> = {
-  camille: ["marketing-plan", "marketing-council", "launch", "product-marketing"],
+  adeline: [
+    "marketing-plan",
+    "marketing-council",
+    "launch",
+    "product-marketing",
+  ],
   vincent: ["marketing-council", "marketing-plan", "offers", "pricing"],
-  nina: ["ads", "analytics", "conversion-tracking", "attribution", "ab-testing", "cro"],
-  lea: ["content-strategy", "copywriting", "emails", "social", "product-marketing"],
+  nina: [
+    "ads",
+    "analytics",
+    "conversion-tracking",
+    "attribution",
+    "ab-testing",
+    "cro",
+  ],
+  juliette: [
+    "content-strategy",
+    "copywriting",
+    "emails",
+    "social",
+    "product-marketing",
+  ],
   hugo: ["copywriting", "copy-editing", "emails", "social", "ad-creative"],
-  ines: ["customer-research", "competitor-profiling", "competitors", "copy-editing", "product-marketing"],
-  noe: ["design-taste-frontend", "logo-design", "image", "ad-creative", "video"],
+  ines: [
+    "customer-research",
+    "competitor-profiling",
+    "competitors",
+    "copy-editing",
+    "product-marketing",
+  ],
+  virginie: [
+    "design-taste-frontend",
+    "logo-design",
+    "image",
+    "ad-creative",
+    "video",
+  ],
   sofia: ["image", "ad-creative", "social", "video"],
-  malo: ["video", "ad-creative", "social", "hyperframes", "hyperframes-cli", "hyperframes-registry", "media-use", "remotion-best-practices", "remotion-to-hyperframes"],
-  zoe: ["customer-research", "competitor-profiling", "marketing-psychology", "marketing-ideas", "marketing-plan"],
-  jules: ["competitor-profiling", "seo-audit", "ai-seo", "link-building", "prospecting"],
-  maya: ["cro", "signup", "onboarding", "customer-research", "pricing"],
-  theo: ["github-gitlab-management", "analytics", "conversion-tracking", "schema", "programmatic-seo", "site-architecture"],
-  lola: ["design-taste-frontend", "signup", "site-architecture", "schema", "free-tools", "paywalls"],
+  malo: [
+    "video",
+    "ad-creative",
+    "social",
+    "hyperframes",
+    "hyperframes-cli",
+    "hyperframes-registry",
+    "media-use",
+    "remotion-best-practices",
+    "remotion-to-hyperframes",
+  ],
+  francois: [
+    "customer-research",
+    "competitor-profiling",
+    "marketing-psychology",
+    "marketing-ideas",
+    "marketing-plan",
+  ],
+  jules: [
+    "competitor-profiling",
+    "seo-audit",
+    "ai-seo",
+    "link-building",
+    "prospecting",
+  ],
+  marie: ["cro", "signup", "onboarding", "customer-research", "pricing"],
+  theo: [
+    "github-gitlab-management",
+    "analytics",
+    "conversion-tracking",
+    "schema",
+    "programmatic-seo",
+    "site-architecture",
+  ],
+  lola: [
+    "design-taste-frontend",
+    "signup",
+    "site-architecture",
+    "schema",
+    "free-tools",
+    "paywalls",
+  ],
   adrien: [],
-  sacha: ["ab-testing", "analytics", "conversion-tracking", "seo-audit", "schema"],
-  paul: ["copy-editing", "ads", "emails", "influencer-marketing", "conversion-tracking"],
-  clara: ["copy-editing", "logo-design", "image", "ad-creative", "marketing-psychology"],
+  sacha: [
+    "ab-testing",
+    "analytics",
+    "conversion-tracking",
+    "seo-audit",
+    "schema",
+  ],
+  paul: [
+    "copy-editing",
+    "ads",
+    "emails",
+    "influencer-marketing",
+    "conversion-tracking",
+  ],
+  clara: [
+    "copy-editing",
+    "logo-design",
+    "image",
+    "ad-creative",
+    "marketing-psychology",
+  ],
 };
 
-const SPECIALTIES_BY_AGENT: Partial<Record<AgentId, readonly AgentSpecialty[]>> = {
+const SPECIALTIES_BY_AGENT: Partial<
+  Record<AgentId, readonly AgentSpecialty[]>
+> = {
   adrien: [
     { label: "Backend PHP et Symfony", skill: "php-symfony-backend" },
     { label: "Next.js SSR et rendu hybride", skill: "nextjs-ssr-hybrid" },
     { label: "APIs REST et intégrations", skill: "rest-api-integration" },
     { label: "Environnements Docker", skill: "docker-development" },
-    { label: "Optimisation des bases de données", skill: "database-optimization" },
+    {
+      label: "Optimisation des bases de données",
+      skill: "database-optimization",
+    },
     { label: "Tests automatisés", skill: "automated-testing" },
   ],
 };
@@ -373,6 +464,18 @@ export const AGENTS: readonly Agent[] = ROWS.map(
 );
 
 const BY_ID = new Map(AGENTS.map((a) => [a.id, a]));
+
+export type QuartierAgent = Agent & { dept: DeptKey };
+
+/** Agents du quartier actif, représentés dans la scène 3D. */
+export const QUARTIER_AGENTS: readonly QuartierAgent[] = AGENTS.filter(
+  (a): a is QuartierAgent => a.dept !== null,
+);
+
+/** Rôles communs à tout le village, hors quartier. */
+export const VILLAGE_AGENTS: readonly Agent[] = AGENTS.filter(
+  (a) => a.dept === null,
+);
 
 export function getAgent(id: AgentId): Agent {
   return BY_ID.get(id) as Agent;
@@ -398,7 +501,9 @@ export function agentFilePath(agent: Agent): string {
 export function agentFile(agent: Agent): string {
   const name = agentFileSlug(agent);
   if (!Object.hasOwn(profiles, name)) {
-    throw new Error(`Fiche agent absente : ${name}. Exécute npm run sync:agents.`);
+    throw new Error(
+      `Fiche agent absente : ${name}. Exécute npm run sync:agents.`,
+    );
   }
   return profiles[name as keyof typeof profiles];
 }
@@ -408,19 +513,38 @@ export function agentInstructions(agent: Agent): string {
 }
 
 export function agentRules(agent: Agent): readonly string[] {
-  const section = agentInstructions(agent).split("## Règles\n")[1]?.split("\n## ")[0];
+  const section = agentInstructions(agent)
+    .split("## Règles\n")[1]
+    ?.split("\n## ")[0];
   if (!section) throw new Error(`Règles absentes : ${agent.id}`);
-  return section.split("\n").filter((line) => line.startsWith("- ")).map((line) => line.slice(2));
+  return section
+    .split("\n")
+    .filter((line) => line.startsWith("- "))
+    .map((line) => line.slice(2));
 }
 
+/** Chemins relatifs au dossier `brain` : cerveau du quartier actif puis cerveau commun du village. */
 export const BASE_NOTES: readonly string[] = [
-  "marque/ton-de-voix.md",
-  "marque/charte-generali-red-studio.md",
-  "projets/parrainage.md",
-  "audiences/agents-et-collaborateurs.md",
-  "conformite/mentions-legales.md",
-  "conformite/rgpd-cookies.md",
-  "outils/matrice-client.md",
-  "veille/concurrence.md",
-  "tech/stack-symfony-next.md",
+  mkdNote("marque/ton-de-voix.md"),
+  mkdNote("marque/charte-generali-red-studio.md"),
+  mkdNote("marque/bibliotheque-generali/README.md"),
+  mkdNote("marque/bibliotheque-generali/generali-design.md"),
+  mkdNote("marque/bibliotheque-generali/tone-of-voice-generali.md"),
+  mkdNote("marque/bibliotheque-generali/orthotypo-generali.md"),
+  mkdNote("marque/bibliotheque-generali/imagerie-bannieres-generali.md"),
+  mkdNote("marque/bibliotheque-generali/motion-design-generali.md"),
+  mkdNote("marque/bibliotheque-generali/reseaux-sociaux-generali.md"),
+  mkdNote("marque/bibliotheque-generali/product-design-generali.md"),
+  mkdNote("marque/bibliotheque-generali/assets-inventaire.md"),
+  mkdNote("projets/parrainage.md"),
+  mkdNote("projets/generali-fr.md"),
+  mkdNote("audiences/agents.md"),
+  mkdNote("audiences/collaborateurs.md"),
+  mkdNote("audiences/clients.md"),
+  mkdNote("audiences/prospects.md"),
+  mkdNote("conformite/mentions-legales.md"),
+  mkdNote("conformite/rgpd-cookies.md"),
+  mkdNote("outils/matrice-client.md"),
+  mkdNote("veille/concurrence.md"),
+  villageNote("tech/stack-symfony-next.md"),
 ];

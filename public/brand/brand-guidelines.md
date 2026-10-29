@@ -1,8 +1,12 @@
-# Village MKD — guide de marque
+# My vill[IA]ge — guide de marque
+
+Nom arrêté le 28/10/2026 selon le brief de Vincent Petit (anciennement Village MKD). Le village réunit plusieurs quartiers ; Direction MKD est le premier.
+
+Identité transitoire : le symbole ci-dessous reste celui de Village MKD en attendant le choix d’une des cinq pistes de [logo-concepts/my-villiage](../logo-concepts/my-villiage/).
 
 ## L’idée
 
-Sept expertises autonomes convergent vers un même centre de validation. Les points représentent les équipes; le losange rouge, le point de décision humain.
+Sept expertises autonomes convergent vers un même centre de validation. Les points représentent les équipes; le losange rouge, le point de décision humain. Dans le mot-symbole, « IA » est évidé dans une touche rouge inclinée de 20° vers la gauche (validée par Vincent Petit le 28/10/2026) : c’est le seul accent rouge du nom.
 
 ## Versions du logo
 
@@ -17,12 +21,13 @@ Sept expertises autonomes convergent vers un même centre de validation. Les poi
 
 ## Palette
 
-| Couleur | HEX | RGB | CMYK approximatif | Usage |
-|---|---|---|---|---|
-| Rouge MKD | `#C21B17` | 194, 27, 23 | 0, 86, 88, 24 | Centre de validation et accents |
-| Encre | `#232222` | 35, 34, 34 | 0, 3, 3, 86 | Symbole, texte et fonds sombres |
-| Ivoire | `#F3F2F0` | 243, 242, 240 | 0, 0, 1, 5 | Fonds clairs et icône d’application |
-| Gris | `#69645F` | 105, 100, 95 | 0, 5, 10, 59 | Texte secondaire |
+| Couleur         | HEX       | RGB           | CMYK approximatif | Usage                                          |
+| --------------- | --------- | ------------- | ----------------- | ---------------------------------------------- |
+| Rouge signature | `#C21B17` | 194, 27, 23   | 0, 86, 88, 24     | Centre de validation, touche « IA » et accents |
+| Rouge profond   | `#8A1310` | 138, 19, 16   | 0, 86, 88, 46     | Épaisseur de la touche « IA »                  |
+| Encre           | `#232222` | 35, 34, 34    | 0, 3, 3, 86       | Symbole, texte et fonds sombres                |
+| Ivoire          | `#F3F2F0` | 243, 242, 240 | 0, 0, 1, 5        | Fonds clairs et icône d’application            |
+| Gris            | `#69645F` | 105, 100, 95  | 0, 5, 10, 59      | Texte secondaire                               |
 
 Les valeurs CMYK sont des conversions indicatives; demander une épreuve à l’imprimeur avant production.
 
@@ -30,7 +35,7 @@ Les valeurs CMYK sont des conversions indicatives; demander une épreuve à l’
 
 - Interface et nom : **Roboto**, graisse 700, comme dans l’application.
 - Texte courant : Roboto 400/500.
-- Le mot-symbole des SVG est converti en tracés pour ne pas dépendre d’une police installée.
+- Le mot-symbole des SVG est converti en tracés Roboto Bold pour ne pas dépendre d’une police installée. Le nom s’écrit « My vill[IA]ge » dans le texte : « vill » en minuscules, « IA » en capitales entre crochets droits. Dans le logo, les crochets sont remplacés par la touche rouge inclinée ; les lettres y sont évidées pour rester lisibles dans les versions une couleur.
 
 ## Espacement et taille
 

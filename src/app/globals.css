@@ -237,6 +237,22 @@ body {
   .scene {
     background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
   }
+  .scene[data-moment="jour"] {
+    --sky-top: #86c3ec;
+    --sky-bottom: #e2f1fa;
+  }
+  .scene[data-moment="lever"] {
+    --sky-top: #e9a98e;
+    --sky-bottom: #fde7d2;
+  }
+  .scene[data-moment="doree"] {
+    --sky-top: #eda860;
+    --sky-bottom: #fde9c4;
+  }
+  .scene[data-moment="nuit"] {
+    --sky-top: #0f1a33;
+    --sky-bottom: #2b3d63;
+  }
   .scene canvas {
     display: block;
     width: 100%;
@@ -262,7 +278,7 @@ body {
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
-  .vlabel-mairie {
+  .vlabel-direction {
     background: #c21b17;
     color: #ffffff;
   }

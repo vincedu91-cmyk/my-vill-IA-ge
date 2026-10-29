@@ -1,4 +1,5 @@
 import type { AgentId, VillageEvent } from "./types";
+import { mkdNote, villageNote } from "./quartiers";
 
 export type ScenarioKey =
   | "carousel"
@@ -24,15 +25,22 @@ const say = (
   log: string,
   ms = 2000,
 ): VillageEvent => ({ t: "say", who, bubble, log, ms });
+/** Lecture dans le cerveau du quartier Direction MKD. */
 const read = (who: AgentId, note: string): VillageEvent => ({
   t: "read",
   who,
-  note,
+  note: mkdNote(note),
+});
+/** Lecture dans le cerveau commun du village. */
+const readVillage = (who: AgentId, note: string): VillageEvent => ({
+  t: "read",
+  who,
+  note: villageNote(note),
 });
 const write = (who: AgentId, note: string): VillageEvent => ({
   t: "write",
   who,
-  note,
+  note: mkdNote(note),
 });
 const hand = (from: AgentId, to: AgentId, item: string): VillageEvent => ({
   t: "hand",
@@ -55,24 +63,24 @@ const carousel: Scenario = {
   files: ["carrousel-parrainage.pdf", "legendes-linkedin.md"],
   gate: [
     "Carrousel prêt pour validation",
-    "Camille a assemblé 6 slides et leurs légendes. Relis-les avant toute diffusion.",
+    "Adeline a assemblé 6 slides et leurs légendes. Relis-les avant toute diffusion.",
   ],
   steps: [
     say(
-      "camille",
+      "adeline",
       "Brief reçu",
       "reçoit le brief et le découpe en tâches par département.",
       1800,
     ),
-    read("camille", "projets/parrainage.md"),
-    hand("camille", "lea", "le plan de travail"),
-    read("lea", "marque/ton-de-voix.md"),
+    read("adeline", "projets/parrainage.md"),
+    hand("adeline", "juliette", "le plan de travail"),
+    read("juliette", "marque/ton-de-voix.md"),
     say(
-      "lea",
+      "juliette",
       "Angle trouvé",
       "fixe l’angle éditorial et le plan en 6 slides.",
     ),
-    hand("lea", "hugo", "le plan"),
+    hand("juliette", "hugo", "le plan"),
     say("hugo", "Rédaction…", "rédige les textes des 6 slides.", 2800),
     hand("hugo", "ines", "les textes"),
     read("ines", "projets/parrainage.md"),
@@ -81,9 +89,9 @@ const carousel: Scenario = {
       "Faits vérifiés",
       "confronte chaque affirmation aux notes du Cerveau.",
     ),
-    hand("ines", "noe", "les textes validés"),
-    read("noe", "marque/charte-generali-red-studio.md"),
-    hand("noe", "sofia", "le brief visuel"),
+    hand("ines", "virginie", "les textes validés"),
+    read("virginie", "marque/charte-generali-red-studio.md"),
+    hand("virginie", "sofia", "le brief visuel"),
     say(
       "sofia",
       "Mise en page…",
@@ -98,8 +106,8 @@ const carousel: Scenario = {
     ),
     read("paul", "conformite/mentions-legales.md"),
     say("paul", "Mentions OK", "ajoute et contrôle les mentions légales."),
-    hand("paul", "camille", "le dossier contrôlé"),
-    say("camille", "Assemblage…", "assemble les slides et les légendes."),
+    hand("paul", "adeline", "le dossier contrôlé"),
+    say("adeline", "Assemblage…", "assemble les slides et les légendes."),
   ],
 };
 
@@ -111,20 +119,24 @@ const newsletter: Scenario = {
   files: ["newsletter-agents.html", "objets-et-preheaders.md"],
   gate: [
     "Newsletter prête pour validation",
-    "Camille a assemblé la newsletter et trois variantes d’objet.",
+    "Adeline a assemblé la newsletter et trois variantes d’objet.",
   ],
   steps: [
     say(
-      "camille",
+      "adeline",
       "Brief reçu",
       "reçoit le brief et le découpe en tâches.",
       1800,
     ),
-    read("camille", "audiences/agents-et-collaborateurs.md"),
-    hand("camille", "lea", "le plan de travail"),
-    read("lea", "marque/ton-de-voix.md"),
-    say("lea", "Plan posé", "définit les rubriques et l’ordre des sujets."),
-    hand("lea", "hugo", "le plan"),
+    read("adeline", "audiences/agents.md"),
+    hand("adeline", "juliette", "le plan de travail"),
+    read("juliette", "marque/ton-de-voix.md"),
+    say(
+      "juliette",
+      "Plan posé",
+      "définit les rubriques et l’ordre des sujets.",
+    ),
+    hand("juliette", "hugo", "le plan"),
     say(
       "hugo",
       "Rédaction…",
@@ -140,8 +152,8 @@ const newsletter: Scenario = {
     hand("ines", "paul", "les textes validés"),
     read("paul", "conformite/mentions-legales.md"),
     say("paul", "Mentions OK", "contrôle mentions légales et désinscription."),
-    hand("paul", "camille", "le dossier contrôlé"),
-    say("camille", "Assemblage…", "assemble la newsletter finale."),
+    hand("paul", "adeline", "le dossier contrôlé"),
+    say("adeline", "Assemblage…", "assemble la newsletter finale."),
   ],
 };
 
@@ -153,23 +165,23 @@ const cx: Scenario = {
   files: ["analyse-cx-parcours.md", "scoring-matrice-client.csv"],
   gate: [
     "Analyse prête pour validation",
-    "Camille a reçu la synthèse et le scoring des frictions, classés par priorité.",
+    "Adeline a reçu la synthèse et le scoring des frictions, classés par priorité.",
   ],
   steps: [
     say(
-      "camille",
+      "adeline",
       "Brief reçu",
       "reçoit le brief et le confie à l’Observatoire.",
       1800,
     ),
-    hand("camille", "zoe", "le brief d’analyse"),
-    read("zoe", "outils/matrice-client.md"),
+    hand("adeline", "francois", "le brief d’analyse"),
+    read("francois", "outils/matrice-client.md"),
     say(
-      "zoe",
+      "francois",
       "Périmètre posé",
       "cadre le parcours à analyser et les critères.",
     ),
-    hand("zoe", "jules", "le périmètre"),
+    hand("francois", "jules", "le périmètre"),
     read("jules", "veille/concurrence.md"),
     say(
       "jules",
@@ -177,23 +189,23 @@ const cx: Scenario = {
       "compare des parcours concurrents et source chaque constat.",
       2800,
     ),
-    hand("jules", "maya", "le benchmark"),
-    read("maya", "outils/matrice-client.md"),
+    hand("jules", "marie", "le benchmark"),
+    read("marie", "outils/matrice-client.md"),
     say(
-      "maya",
+      "marie",
       "Scoring CX/UX…",
       "score chaque friction avec la Matrice Client.",
       2800,
     ),
-    hand("maya", "zoe", "le scoring"),
+    hand("marie", "francois", "le scoring"),
     say(
-      "zoe",
+      "francois",
       "Synthèse…",
       "rédige la synthèse et priorise les actions.",
       2400,
     ),
-    hand("zoe", "camille", "la synthèse"),
-    say("camille", "Assemblage…", "assemble le rapport final."),
+    hand("francois", "adeline", "la synthèse"),
+    say("adeline", "Assemblage…", "assemble le rapport final."),
   ],
 };
 
@@ -205,28 +217,33 @@ const landing: Scenario = {
   files: ["landing-maquette.fig", "landing-next/ (code)", "checklist-rgpd.md"],
   gate: [
     "Landing prête pour validation",
-    "Camille a réuni la maquette, le code testé et la checklist RGPD.",
+    "Adeline a réuni la maquette, le code testé et la checklist RGPD.",
   ],
   steps: [
     say(
-      "camille",
+      "adeline",
       "Brief reçu",
       "reçoit le brief et le découpe en design, code et conformité.",
       1800,
     ),
-    hand("camille", "nina", "les objectifs de la landing"),
-    read("nina", "audiences/agents-et-collaborateurs.md"),
+    hand("adeline", "nina", "les objectifs de la landing"),
+    read("nina", "audiences/prospects.md"),
     say(
       "nina",
       "Objectifs posés",
       "définit la conversion principale, les KPI et les hypothèses à tester.",
     ),
-    hand("nina", "noe", "les critères de conversion"),
-    hand("camille", "noe", "le brief"),
-    read("noe", "marque/charte-generali-red-studio.md"),
-    say("noe", "Maquette…", "dessine la maquette selon Red Studio 2.0.", 2800),
-    hand("noe", "theo", "la maquette"),
-    read("theo", "tech/stack-symfony-next.md"),
+    hand("nina", "virginie", "les critères de conversion"),
+    hand("adeline", "virginie", "le brief"),
+    read("virginie", "marque/charte-generali-red-studio.md"),
+    say(
+      "virginie",
+      "Maquette…",
+      "dessine la maquette selon Red Studio 2.0.",
+      2800,
+    ),
+    hand("virginie", "theo", "la maquette"),
+    readVillage("theo", "tech/stack-symfony-next.md"),
     say(
       "theo",
       "Structure posée",
@@ -250,8 +267,8 @@ const landing: Scenario = {
     hand("nina", "paul", "la landing à contrôler"),
     read("paul", "conformite/rgpd-cookies.md"),
     say("paul", "RGPD OK", "contrôle bandeau cookies et mentions de collecte."),
-    hand("paul", "camille", "le dossier contrôlé"),
-    say("camille", "Assemblage…", "assemble maquette, code et checklist."),
+    hand("paul", "adeline", "le dossier contrôlé"),
+    say("adeline", "Assemblage…", "assemble maquette, code et checklist."),
   ],
 };
 
@@ -260,32 +277,69 @@ const logo: Scenario = {
   label: "Création de logo",
   slug: "creation-logo",
   brief: "Créer un logo distinctif et son kit d’identité visuelle",
-  files: ["logo.svg", "variantes-logo.svg", "favicon.ico", "guide-utilisation.md"],
+  files: [
+    "logo.svg",
+    "variantes-logo.svg",
+    "favicon.ico",
+    "guide-utilisation.md",
+  ],
   gate: [
     "Kit logo prêt pour validation",
-    "Simulation : Camille a réuni le logo, ses variantes et le guide d’utilisation. Aucun fichier réel n’a été généré.",
+    "Simulation : Adeline a réuni le logo, ses variantes et le guide d’utilisation. Aucun fichier réel n’a été généré.",
   ],
   steps: [
-    say("camille", "Brief logo reçu", "cadre le nom, les publics, les usages et les contraintes du logo."),
-    hand("camille", "noe", "le brief d’identité"),
-    say("noe", "Recherche visuelle…", "simule la recherche de références avec logo-design, puis sélectionne trois concepts distincts."),
-    hand("noe", "sofia", "les trois pistes à construire"),
-    say("sofia", "Concepts SVG…", "simule la construction des concepts en noir et blanc et les tests à 16 et 32 pixels."),
-    hand("sofia", "noe", "les concepts testés"),
+    say(
+      "adeline",
+      "Brief logo reçu",
+      "cadre le nom, les publics, les usages et les contraintes du logo.",
+    ),
+    hand("adeline", "virginie", "le brief d’identité"),
+    say(
+      "virginie",
+      "Recherche visuelle…",
+      "simule la recherche de références avec logo-design, puis sélectionne trois concepts distincts.",
+    ),
+    hand("virginie", "sofia", "les trois pistes à construire"),
+    say(
+      "sofia",
+      "Concepts SVG…",
+      "simule la construction des concepts en noir et blanc et les tests à 16 et 32 pixels.",
+    ),
+    hand("sofia", "virginie", "les concepts testés"),
     gate(
-      "noe",
+      "virginie",
       "Concepts logo à valider",
       "Simulation : valide une direction avant la préparation du kit. Les concepts et leurs tests ne sont pas réellement générés.",
     ),
-    say("noe", "Préparation du kit…", "simule l’affinage de la direction approuvée, de la palette et des variantes."),
-    hand("noe", "lola", "les spécifications web du logo"),
-    say("lola", "Déclinaisons web…", "simule la préparation du favicon et le contrôle du logo dans une interface avec Taste."),
+    say(
+      "virginie",
+      "Préparation du kit…",
+      "simule l’affinage de la direction approuvée, de la palette et des variantes.",
+    ),
+    hand("virginie", "lola", "les spécifications web du logo"),
+    say(
+      "lola",
+      "Déclinaisons web…",
+      "simule la préparation du favicon et le contrôle du logo dans une interface avec Taste.",
+    ),
     hand("lola", "clara", "les déclinaisons du logo"),
-    say("clara", "Contrôle marque…", "simule la vérification des couleurs, des espacements et des usages monochromes."),
+    say(
+      "clara",
+      "Contrôle marque…",
+      "simule la vérification des couleurs, des espacements et des usages monochromes.",
+    ),
     hand("clara", "paul", "le dossier d’identité"),
-    say("paul", "Points juridiques…", "rappelle qu’une recherche professionnelle de disponibilité de marque reste nécessaire."),
-    hand("paul", "camille", "le dossier contrôlé"),
-    say("camille", "Assemblage du kit…", "simule l’assemblage du logo, des variantes et du guide d’utilisation."),
+    say(
+      "paul",
+      "Points juridiques…",
+      "rappelle qu’une recherche professionnelle de disponibilité de marque reste nécessaire.",
+    ),
+    hand("paul", "adeline", "le dossier contrôlé"),
+    say(
+      "adeline",
+      "Assemblage du kit…",
+      "simule l’assemblage du logo, des variantes et du guide d’utilisation.",
+    ),
   ],
 };
 
@@ -294,35 +348,74 @@ const video: Scenario = {
   label: "Création de vidéos",
   slug: "creation-video",
   brief: "Créer une vidéo pour les réseaux sociaux",
-  files: ["script-video.md", "storyboard-video.pdf", "video-finale.mp4", "sous-titres.srt"],
+  files: [
+    "script-video.md",
+    "storyboard-video.pdf",
+    "video-finale.mp4",
+    "sous-titres.srt",
+  ],
   gate: [
     "Vidéo prête pour validation",
-    "Simulation : Camille a réuni le script, le storyboard, la vidéo et ses sous-titres. Aucun fichier réel n’a été généré.",
+    "Simulation : Adeline a réuni le script, le storyboard, la vidéo et ses sous-titres. Aucun fichier réel n’a été généré.",
   ],
   steps: [
-    say("camille", "Brief vidéo reçu", "cadre l’objectif, le public et le canal de diffusion."),
-    hand("camille", "lea", "le brief vidéo"),
-    read("lea", "audiences/agents-et-collaborateurs.md"),
-    say("lea", "Angle posé", "définit l’angle éditorial et la structure de la vidéo."),
-    hand("lea", "hugo", "l’angle et la structure"),
+    say(
+      "adeline",
+      "Brief vidéo reçu",
+      "cadre l’objectif, le public et le canal de diffusion.",
+    ),
+    hand("adeline", "juliette", "le brief vidéo"),
+    read("juliette", "audiences/clients.md"),
+    say(
+      "juliette",
+      "Angle posé",
+      "définit l’angle éditorial et la structure de la vidéo.",
+    ),
+    hand("juliette", "hugo", "l’angle et la structure"),
     read("hugo", "marque/ton-de-voix.md"),
-    say("hugo", "Script en cours…", "rédige la voix off et les textes à l’écran.", 2600),
+    say(
+      "hugo",
+      "Script en cours…",
+      "rédige la voix off et les textes à l’écran.",
+      2600,
+    ),
     hand("hugo", "ines", "le script"),
-    say("ines", "Vérification…", "vérifie les affirmations et les chiffres du script."),
-    hand("ines", "noe", "le script vérifié"),
-    read("noe", "marque/charte-generali-red-studio.md"),
-    say("noe", "Storyboard…", "définit la direction visuelle et le storyboard."),
+    say(
+      "ines",
+      "Vérification…",
+      "vérifie les affirmations et les chiffres du script.",
+    ),
+    hand("ines", "virginie", "le script vérifié"),
+    read("virginie", "marque/charte-generali-red-studio.md"),
+    say(
+      "virginie",
+      "Storyboard…",
+      "définit la direction visuelle et le storyboard.",
+    ),
     gate(
-      "noe",
+      "virginie",
       "Storyboard vidéo à valider",
       "Valide le script et le storyboard avant l’animation. La production reste simulée et aucun rendu vidéo n’est créé.",
     ),
-    hand("noe", "malo", "le storyboard validé"),
-    say("malo", "Animation…", "simule l’animation et le montage de la vidéo.", 3000),
+    hand("virginie", "malo", "le storyboard validé"),
+    say(
+      "malo",
+      "Animation…",
+      "simule l’animation et le montage de la vidéo.",
+      3000,
+    ),
     hand("malo", "clara", "la vidéo et ses éléments de marque"),
-    say("clara", "Contrôle marque…", "vérifie les couleurs, la typographie et les éléments de marque."),
-    hand("clara", "camille", "le dossier vidéo contrôlé"),
-    say("camille", "Assemblage…", "simule l’assemblage de la vidéo, du script et des sous-titres."),
+    say(
+      "clara",
+      "Contrôle marque…",
+      "vérifie les couleurs, la typographie et les éléments de marque.",
+    ),
+    hand("clara", "adeline", "le dossier vidéo contrôlé"),
+    say(
+      "adeline",
+      "Assemblage…",
+      "simule l’assemblage de la vidéo, du script et des sous-titres.",
+    ),
   ],
 };
 
@@ -349,14 +442,14 @@ export function isoDay(date: Date): string {
 export function runEvents(scenario: Scenario, date: Date): VillageEvent[] {
   return [
     ...scenario.steps,
-    gate("camille", scenario.gate[0], scenario.gate[1]),
-    write("camille", `journal/${isoDay(date)}-${scenario.slug}.md`),
+    gate("adeline", scenario.gate[0], scenario.gate[1]),
+    write("adeline", `journal/${isoDay(date)}-${scenario.slug}.md`),
   ];
 }
 
-/** Agents qui interviennent dans une liste d'événements, plus Camille et Vincent. */
+/** Agents qui interviennent dans une liste d'événements, plus Adeline et Vincent. */
 export function involvedAgents(events: readonly VillageEvent[]): Set<AgentId> {
-  const ids = new Set<AgentId>(["camille", "vincent"]);
+  const ids = new Set<AgentId>(["adeline", "vincent"]);
   for (const e of events) {
     if (e.t === "hand") {
       ids.add(e.from);

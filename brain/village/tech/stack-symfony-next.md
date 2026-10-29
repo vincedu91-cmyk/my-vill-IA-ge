@@ -4,7 +4,9 @@
 
 Snapshot communiqué par Vincent Petit le **26/10/2026**. Il réunit plusieurs environnements et projets : les versions et outils ne s'appliquent pas nécessairement à chaque site ou livraison. Vérifier le périmètre et l'état réel du dépôt avant tout changement ou déploiement.
 
-## Application Village MKD dans ce dépôt
+Classée le 28/10/2026 dans le cerveau commun du village, selon le brief de Vincent Petit. Les environnements propres à Generali ne s'appliquent qu'aux quartiers et projets concernés.
+
+## Application My vill[IA]ge dans ce dépôt
 
 Le manifeste du dépôt indique :
 

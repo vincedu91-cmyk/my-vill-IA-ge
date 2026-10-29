@@ -9,8 +9,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Village MKD",
-  description: "Les agents IA de la Direction MKD au travail, dans un village 3D d'îles flottantes.",
+  title: "My vill[IA]ge",
+  description: "Le village des agents IA : la Direction MKD au travail dans son quartier 3D d'îles flottantes.",
   manifest: "/brand/site.webmanifest",
 };
 

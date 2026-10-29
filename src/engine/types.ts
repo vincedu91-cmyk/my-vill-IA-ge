@@ -1,16 +1,16 @@
 export type AgentId =
-  | "camille"
+  | "adeline"
   | "vincent"
   | "nina"
-  | "lea"
+  | "juliette"
   | "hugo"
   | "ines"
-  | "noe"
+  | "virginie"
   | "sofia"
   | "malo"
-  | "zoe"
+  | "francois"
   | "jules"
-  | "maya"
+  | "marie"
   | "theo"
   | "adrien"
   | "lola"
@@ -26,10 +26,10 @@ export type VillageEvent =
   | { t: "gate"; owner: AgentId; title: string; text: string };
 
 export type DeptKey =
-  | "mairie"
+  | "direction"
   | "contenu"
-  | "creation"
-  | "dev"
+  | "agence"
+  | "design"
   | "conf"
   | "veille"
   | "cafe";

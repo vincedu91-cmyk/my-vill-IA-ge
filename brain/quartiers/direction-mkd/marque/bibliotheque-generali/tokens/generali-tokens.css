@@ -1,0 +1,121 @@
+/* =====================================================================
+   Generali France — Design tokens (v1, 2026-10-28)
+   🟥 Charte : Brand Guidelines / templates PPT 2026
+   🌐 Observé : generali.fr, monespace.generali.fr
+   🟨 Reco : valeurs déduites (à valider Studio graphique)
+   ===================================================================== */
+:root {
+  /* ---------- Couleurs de marque 🟥 ---------- */
+  --g-red: #C21B17;          /* RGB 194-27-23 · CMJN 0/95/100/20 · Pantone 180 C */
+  --g-dark-red: #AA1B17;     /* RGB 170-27-23 · CMJN 15/95/100/25 · Pantone 7628 C — toujours combiné au rouge */
+  --g-white: #FFFFFF;
+  --g-grey-dark: #707070;    /* Cool Grey 7 — texte secondaire (4,95:1 sur blanc) */
+  --g-grey-light: #A0A0A0;   /* Cool Grey 1 — fonctionnel, JAMAIS pour du texte (2,61:1) */
+
+  /* ---------- Extensions 🟥 PPT 2026 / 🌐 web ---------- */
+  --g-anthracite: #323232;   /* 🟥 PPT accent2 */
+  --g-ink: #20252B;          /* 🌐 texte titres, bouton foncé */
+  --g-text: #000000;         /* 🌐 */
+  --g-text-muted: #6F7072;   /* 🌐 */
+  --g-deep-red: #711B17;     /* 🌐 base des ombres, illustrations flat */
+  --g-red-hover: #AA1B17;    /* 🟨 hover = dark red */
+  --g-surface-warm: #F9F5F4; /* 🌐 */
+  --g-surface-rose: #F3E7E9; /* 🟥 PPT vertical / carrousels */
+  --g-surface-grey: #F2F2F2; /* 🟥 PPT */
+  --g-border: #DCDCDC;       /* 🟥 PPT accent5 */
+
+  /* Teintes data-viz uniquement — principe 🟥 (slide « Logos, plumes, couleurs »),
+     valeurs 🟨 calculées par mélange avec le blanc (80/60/40/20 %) ; jamais sur la texture d'aile */
+  --g-red-80: #CE4945; --g-red-60: #DA7674; --g-red-40: #E7A4A2; --g-red-20: #F3D1D1;
+  --g-grey-80: #8D8D8D; --g-grey-60: #A9A9A9; --g-grey-40: #C6C6C6; --g-grey-20: #E2E2E2;
+
+  /* Fonctionnels 🟨 (hors charte, usage strict UI) */
+  --g-success: #1E7B4F;
+  --g-warning: #B35C00;
+  --g-error: var(--g-red);
+  --g-focus: var(--g-red);
+
+  /* ---------- Typographie ---------- */
+  --g-font-display: "Helvetica Neue LT Std", "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+  --g-font-ui: "Roboto Condensed", Roboto, Arial, sans-serif;   /* 🌐 generali.fr */
+  --g-font-body: Roboto, Arial, sans-serif;                      /* 🟥 police digitale */
+  --g-font-office: Arial, sans-serif;                            /* 🟥 bureautique */
+
+  --g-fs-display: 48px;  --g-lh-display: 52px;
+  --g-fs-h1: 32px;       --g-lh-h1: 38px;   /* 🌐 mobile */
+  --g-fs-h2: 35px;       --g-lh-h2: 48px;   /* 🌐 */
+  --g-fs-accroche: 28px; --g-lh-accroche: 38px;
+  --g-fs-h3: 25px;       --g-lh-h3: 35px;
+  --g-fs-h4: 22px;       --g-lh-h4: 32px;
+  --g-fs-lead: 18px;     --g-lh-lead: 27px;
+  --g-fs-body: 16px;     --g-lh-body: 25px;
+  --g-fs-small: 14px;    --g-lh-small: 21px;
+  --g-fs-overline: 12px; --g-lh-overline: 18px;
+  --g-fs-button: 15px;
+  --g-fw-regular: 400; --g-fw-medium: 500; --g-fw-semibold: 600; --g-fw-bold: 700; --g-fw-black: 900;
+
+  /* ---------- Espacements 🟨 (base 8) ---------- */
+  --g-space-1: 4px;  --g-space-2: 8px;  --g-space-3: 12px; --g-space-4: 16px;
+  --g-space-5: 24px; --g-space-6: 32px; --g-space-7: 40px; --g-space-8: 48px;
+  --g-space-9: 64px; --g-space-10: 80px; --g-space-11: 96px; --g-space-12: 128px;
+
+  /* ---------- Rayons 🌐 ---------- */
+  --g-radius-xs: 5px; --g-radius-btn: 8px; --g-radius-md: 12px; --g-radius-card: 16px;
+  --g-radius-xl: 24px; --g-radius-hero: 40px; --g-radius-pill: 99px; --g-radius-circle: 50%;
+
+  /* ---------- Ombres 🌐 ---------- */
+  --g-shadow-sm: 0 4px 16px rgba(0, 0, 0, .08);
+  --g-shadow-card: 0 20px 35px -15px rgba(113, 27, 23, .15);
+  --g-shadow-soft-red: 0 10px 34px 0 rgba(194, 27, 23, .05);
+  --g-shadow-dramatic: 0 22px 34px -12px rgba(32, 1, 0, .7);
+
+  /* ---------- Layout 🌐 ---------- */
+  --g-container: 1080px;
+  --g-header-h: 68px;
+  --g-btn-h: 48px;
+  --g-btn-px: 24px;
+  --g-bp-sm: 576px; --g-bp-md: 768px; --g-bp-lg: 992px; --g-bp-xl: 1200px;
+
+  /* ---------- Motion 🟨 ---------- */
+  --g-dur-micro: 150ms; --g-dur-fast: 250ms; --g-dur-base: 400ms; --g-dur-slow: 600ms;
+  --g-ease-out: cubic-bezier(.22, 1, .36, 1);
+  --g-ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --g-ease-in: cubic-bezier(.55, 0, 1, .45);
+  --g-stagger: 60ms;
+  --g-angle-wing: -40deg;
+
+  /* ---------- Z-index ---------- */
+  --g-z-sticky: 10; --g-z-header: 20; --g-z-dropdown: 30; --g-z-overlay: 40;
+  --g-z-modal: 50; --g-z-toast: 60; --g-z-tooltip: 70;
+}
+
+/* ---------- Composants de base ---------- */
+.g-btn { display:inline-flex; align-items:center; justify-content:center; height:var(--g-btn-h); padding:0 var(--g-btn-px);
+  border-radius:var(--g-radius-btn); font:var(--g-fw-semibold) var(--g-fs-button)/1 var(--g-font-ui); border:1px solid transparent;
+  cursor:pointer; text-decoration:none; transition:background-color var(--g-dur-micro) var(--g-ease-out), transform 100ms var(--g-ease-out); }
+.g-btn:active { transform:scale(.98); }
+.g-btn:focus-visible { outline:2px solid var(--g-focus); outline-offset:2px; }
+.g-btn--primary { background:var(--g-red); color:var(--g-white); }
+.g-btn--primary:hover { background:var(--g-red-hover); }
+.g-btn--inverse { background:var(--g-white); color:var(--g-red); border-color:var(--g-white); }
+.g-btn--inverse:hover { background:var(--g-surface-warm); }
+.g-btn--inverse:focus-visible { outline-color:var(--g-white); }
+.g-btn--dark { background:var(--g-ink); color:var(--g-white); }
+.g-btn--outline { background:transparent; color:var(--g-red); border-color:var(--g-red); }
+
+.g-card { background:var(--g-white); border-radius:var(--g-radius-card); box-shadow:var(--g-shadow-card); padding:var(--g-space-5);
+  transition:transform var(--g-dur-fast) var(--g-ease-out); }
+.g-card:hover { transform:translateY(-4px); }
+
+.g-overline { font:var(--g-fw-semibold) var(--g-fs-overline)/var(--g-lh-overline) var(--g-font-ui); text-transform:uppercase; color:var(--g-red); letter-spacing:.02em; }
+.g-title { font-family:var(--g-font-display); font-weight:var(--g-fw-bold); text-transform:uppercase; line-height:1.05; }
+
+/* Plume (parallélogramme, angles obtus arrondis) — porte-label */
+.g-plume { display:inline-block; position:relative; padding:6px 28px 6px 20px; color:var(--g-white);
+  font:var(--g-fw-bold) 14px/1.2 var(--g-font-ui); text-transform:uppercase; isolation:isolate; }
+.g-plume::before { content:""; position:absolute; inset:0; z-index:-1; background:var(--g-red);
+  transform:skewX(var(--g-angle-wing)); border-radius:8px 0 8px 0; }
+.g-plume--outline { color:var(--g-red); }
+.g-plume--outline::before { background:transparent; border:1px solid var(--g-red); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; } }

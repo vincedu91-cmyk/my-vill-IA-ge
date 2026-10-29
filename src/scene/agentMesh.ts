@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import type { Agent } from "@/engine/agents";
 import type { AgentLive, DeepReadonly } from "@/engine/types";
-import { getDept } from "@/engine/world";
+import { agentColor } from "@/engine/world";
 import type { Kit } from "./materials";
 
 const PANTS = 0x3a3f4b;
@@ -24,7 +24,7 @@ export function createAgentMesh(
   kit: Kit,
   hitMat: THREE.Material,
 ): AgentMesh {
-  const shirt = agent.human ? HUMAN_SHIRT : getDept(agent.dept).color;
+  const shirt = agent.human ? HUMAN_SHIRT : agentColor(agent);
   const group = new THREE.Group();
   const body = new THREE.Group();
   group.add(body);

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { getAgent } from '@/engine/agents';
 import type { LogEntry } from '@/engine/types';
-import { cssColor, getDept } from '@/engine/world';
+import { agentColor, cssColor } from '@/engine/world';
 import { SidePanel } from './SidePanel';
 
 function clock(ms: number): string {
@@ -40,7 +40,7 @@ export function Journal({ log, onClose }: { log: readonly LogEntry[]; onClose():
                 <span
                   aria-hidden="true"
                   className="mt-1.5 size-2 shrink-0 rounded-full"
-                  style={{ background: cssColor(getDept(agent.dept).color) }}
+                  style={{ background: cssColor(agentColor(agent)) }}
                 />
                 <span>
                   <strong className="font-medium">{agent.name}</strong> {entry.text}

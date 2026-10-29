@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AGENTS, getAgent } from "@/engine/agents";
+import { QUARTIER_AGENTS, getAgent } from "@/engine/agents";
 import type { AgentId, DeepReadonly, LiveState } from "@/engine/types";
 import { DEPTS, islandPoint } from "@/engine/world";
 import { BUILDING_OFFSET } from "./islands";
@@ -60,7 +60,7 @@ export function createOverlay(root: HTMLElement): Overlay {
     pos: new THREE.Vector3(0, 6.7, 0),
   });
 
-  const bubbles = new Map(AGENTS.map((a) => [a.id, make("vbubble")]));
+  const bubbles = new Map(QUARTIER_AGENTS.map((a) => [a.id, make("vbubble")]));
   const bubbleText = new Map<AgentId, string>();
   const name = make("vname");
   const v = new THREE.Vector3();
@@ -69,7 +69,7 @@ export function createOverlay(root: HTMLElement): Overlay {
     update(camera, live, selected, width, height) {
       for (const l of labels) place(l.el, l.pos, camera, width, height);
 
-      for (const a of AGENTS) {
+      for (const a of QUARTIER_AGENTS) {
         const el = bubbles.get(a.id) as HTMLElement;
         const agent = live.agents[a.id];
         const text = agent.bubble?.text ?? "";

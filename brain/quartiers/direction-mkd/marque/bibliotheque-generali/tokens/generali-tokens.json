@@ -1,0 +1,259 @@
+{
+  "$meta": {
+    "name": "Generali France tokens",
+    "version": "1.0.0",
+    "date": "2026-10-28",
+    "legend": {
+      "charte": "Brand Guidelines / PPT 2026",
+      "observe": "generali.fr / monespace",
+      "reco": "recommandation à valider"
+    }
+  },
+  "color": {
+    "brand": {
+      "red": {
+        "value": "#C21B17",
+        "rgb": "194,27,23",
+        "cmyk": "0/95/100/20",
+        "pantone": "180 C / 179 U",
+        "ral": "Design 040.40.67",
+        "source": "charte"
+      },
+      "darkRed": {
+        "value": "#AA1B17",
+        "rgb": "170,27,23",
+        "cmyk": "15/95/100/25",
+        "pantone": "7628 C / 2350 U",
+        "ral": "3000",
+        "source": "charte",
+        "rule": "toujours combiné au rouge"
+      },
+      "white": {
+        "value": "#FFFFFF",
+        "source": "charte"
+      },
+      "greyDark": {
+        "value": "#707070",
+        "rgb": "112,112,112",
+        "cmyk": "0/0/0/65",
+        "pantone": "Cool Grey 7",
+        "source": "charte"
+      },
+      "greyLight": {
+        "value": "#A0A0A0",
+        "rgb": "160,160,160",
+        "cmyk": "0/0/0/20",
+        "pantone": "Cool Grey 1",
+        "ral": "7047",
+        "source": "charte",
+        "rule": "jamais pour du texte"
+      }
+    },
+    "extended": {
+      "anthracite": {
+        "value": "#323232",
+        "source": "charte (PPT)"
+      },
+      "ink": {
+        "value": "#20252B",
+        "source": "observe"
+      },
+      "textMuted": {
+        "value": "#6F7072",
+        "source": "observe"
+      },
+      "deepRed": {
+        "value": "#711B17",
+        "source": "observe"
+      },
+      "surfaceWarm": {
+        "value": "#F9F5F4",
+        "source": "observe"
+      },
+      "surfaceRose": {
+        "value": "#F3E7E9",
+        "source": "charte (PPT)"
+      },
+      "surfaceGrey": {
+        "value": "#F2F2F2",
+        "source": "charte (PPT)"
+      },
+      "border": {
+        "value": "#DCDCDC",
+        "source": "charte (PPT)"
+      }
+    },
+    "dataviz": {
+      "red": [
+        "#C21B17",
+        "#CE4945",
+        "#DA7674",
+        "#E7A4A2",
+        "#F3D1D1"
+      ],
+      "grey": [
+        "#707070",
+        "#8D8D8D",
+        "#A9A9A9",
+        "#C6C6C6",
+        "#E2E2E2"
+      ],
+      "source": "reco (principe charte PPT)"
+    },
+    "functional": {
+      "success": "#1E7B4F",
+      "warning": "#B35C00",
+      "error": "#C21B17",
+      "source": "reco"
+    }
+  },
+  "font": {
+    "display": "\"Helvetica Neue LT Std\", \"Roboto Condensed\", \"Arial Narrow\", Arial, sans-serif",
+    "ui": "\"Roboto Condensed\", Roboto, Arial, sans-serif",
+    "body": "Roboto, Arial, sans-serif",
+    "office": "Arial, sans-serif",
+    "scale": {
+      "display": [
+        48,
+        52,
+        700
+      ],
+      "h1": [
+        32,
+        38,
+        700
+      ],
+      "h2": [
+        35,
+        48,
+        700
+      ],
+      "accroche": [
+        28,
+        38,
+        700
+      ],
+      "h3": [
+        25,
+        35,
+        700
+      ],
+      "h4": [
+        22,
+        32,
+        700
+      ],
+      "lead": [
+        18,
+        27,
+        400
+      ],
+      "body": [
+        16,
+        25,
+        400
+      ],
+      "small": [
+        14,
+        21,
+        500
+      ],
+      "overline": [
+        12,
+        18,
+        600
+      ],
+      "button": [
+        15,
+        15,
+        600
+      ]
+    },
+    "rules": [
+      "Titres CAPITALES condensées très grasses",
+      "Sous-titres capitales Light/Bold",
+      "Corps en bas-de-casse",
+      "3 styles max par document",
+      "Majuscules accentuées"
+    ]
+  },
+  "space": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    40,
+    48,
+    64,
+    80,
+    96,
+    128
+  ],
+  "radius": {
+    "xs": 5,
+    "button": 8,
+    "md": 12,
+    "card": 16,
+    "xl": 24,
+    "hero": 40,
+    "pill": 99,
+    "circle": "50%"
+  },
+  "shadow": {
+    "sm": "0 4px 16px rgba(0,0,0,.08)",
+    "card": "0 20px 35px -15px rgba(113,27,23,.15)",
+    "softRed": "0 10px 34px 0 rgba(194,27,23,.05)",
+    "dramatic": "0 22px 34px -12px rgba(32,1,0,.7)"
+  },
+  "layout": {
+    "container": 1080,
+    "headerHeight": 68,
+    "buttonHeight": 48,
+    "buttonPaddingX": 24,
+    "breakpoints": {
+      "sm": 576,
+      "md": 768,
+      "lg": 992,
+      "xl": 1200
+    }
+  },
+  "motion": {
+    "fps": 25,
+    "duration": {
+      "micro": 150,
+      "fast": 250,
+      "base": 400,
+      "slow": 600,
+      "hold": 2000
+    },
+    "easing": {
+      "out": "cubic-bezier(.22,1,.36,1)",
+      "inOut": "cubic-bezier(.65,0,.35,1)",
+      "in": "cubic-bezier(.55,0,1,.45)"
+    },
+    "staggerMs": 60,
+    "wingAngleDeg": -40,
+    "source": "reco"
+  },
+  "logo": {
+    "A_gospel_min_mm": 50,
+    "A_line_range_mm": [
+      15,
+      50
+    ],
+    "A_min_mm": 15,
+    "B_gospel_min_mm": 225,
+    "B_line_range_mm": [
+      50,
+      225
+    ],
+    "B_min_mm": 50,
+    "croppedWing_px": [
+      20,
+      12
+    ],
+    "clearSpace": "4x"
+  }
+}

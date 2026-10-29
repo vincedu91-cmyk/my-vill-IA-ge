@@ -12,6 +12,7 @@ import { Village, type VillageHandle } from '@/components/Village';
 import { Simulation } from '@/engine/simulation';
 import type { AgentId, DeptKey, UiState } from '@/engine/types';
 import type { Conversation } from '@/engine/discussion';
+import type { MomentChoice } from '@/scene/moments';
 
 const EMPTY_CONVERSATION: Conversation = { messages: [], draft: '' };
 
@@ -24,6 +25,7 @@ export default function Home() {
   const [seenSelected, setSeenSelected] = useState<AgentId | null>(null);
   const [dismissed, setDismissed] = useState<UiState['deliverables']>(null);
   const [conversations, setConversations] = useState<Partial<Record<AgentId, Conversation>>>({});
+  const [moment, setMoment] = useState<MomentChoice>('reel');
 
   // Une sélection (clic 3D ou carte d'équipe) ouvre la fiche de l'agent.
   if (ui.selected !== seenSelected) {
@@ -41,9 +43,16 @@ export default function Home() {
 
   return (
     <main className="fixed inset-0 overflow-hidden">
-      <Village sim={sim} ref={villageRef} />
+      <Village sim={sim} moment={moment} ref={villageRef} />
 
-      <TopBar ui={ui} view={view} onView={openView} onRotate={(d) => villageRef.current?.rotate(d)} />
+      <TopBar
+        ui={ui}
+        view={view}
+        onView={openView}
+        onRotate={(d) => villageRef.current?.rotate(d)}
+        moment={moment}
+        onMoment={setMoment}
+      />
       <TeamRail
         active={view === 'team' ? teamDept : null}
         onOpen={(dept) => {

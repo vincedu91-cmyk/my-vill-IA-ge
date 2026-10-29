@@ -3,7 +3,8 @@
 import { useId, useRef, useState } from 'react';
 import { agentFile, agentFilePath, agentRules, getAgent, AGENT_SKILLS } from '@/engine/agents';
 import type { AgentId, LogEntry } from '@/engine/types';
-import { cssColor, getDept } from '@/engine/world';
+import { ACTIVE_QUARTIER, VILLAGE_NAME } from '@/engine/quartiers';
+import { agentColor, cssColor, getDept } from '@/engine/world';
 import { SidePanel } from './SidePanel';
 import { Avatar } from './TeamPanel';
 import { AgentDiscussion } from './AgentDiscussion';
@@ -26,7 +27,7 @@ export function AgentCard({ selected, log, onClose, conversation, onConversation
   const uid = useId();
 
   const agent = getAgent(selected);
-  const dept = getDept(agent.dept);
+  const place = agent.dept ? `${ACTIVE_QUARTIER.name} · ${getDept(agent.dept).name}` : `Village ${VILLAGE_NAME} · tous les quartiers`;
   const recent = log.filter((l) => l.who === selected).slice(-3);
   const file = agent.human ? null : agentFile(agent);
 
@@ -60,8 +61,8 @@ export function AgentCard({ selected, log, onClose, conversation, onConversation
       onClose={onClose}
       eyebrow={
         <>
-          <span className="size-2 rounded-full" style={{ background: cssColor(dept.color) }} />
-          {dept.name}
+          <span className="size-2 rounded-full" style={{ background: cssColor(agentColor(agent)) }} />
+          {place}
           {agent.manager ? ' · Chef d’équipe' : ''}
         </>
       }

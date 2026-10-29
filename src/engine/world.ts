@@ -7,9 +7,9 @@ export interface Dept {
   color: number;
 }
 
-/** Ordre de l'anneau : la Mairie (index 0) apparaît en haut de l'écran. */
+/** Ordre de l'anneau : la Direction (index 0) apparaît en haut de l'écran. */
 export const DEPTS: readonly Dept[] = [
-  { key: "mairie", name: "Mairie MKD", label: "Mairie MKD", color: 0xc21b17 },
+  { key: "direction", name: "Direction", label: "Direction", color: 0xc21b17 },
   {
     key: "contenu",
     name: "Atelier Contenu",
@@ -17,12 +17,17 @@ export const DEPTS: readonly Dept[] = [
     color: 0x3d78a8,
   },
   {
-    key: "creation",
-    name: "Studio Création",
-    label: "Création",
+    key: "agence",
+    name: "Agence Interne",
+    label: "Agence Interne",
     color: 0xc9892b,
   },
-  { key: "dev", name: "Forge Dev", label: "Dev", color: 0x5b5f97 },
+  {
+    key: "design",
+    name: "Design d'Expériences",
+    label: "Design d'Expériences",
+    color: 0x5b5f97,
+  },
   { key: "conf", name: "Conformité", label: "Conformité", color: 0x8a8d91 },
   { key: "veille", name: "Observatoire", label: "Veille", color: 0x3f8f7b },
   { key: "cafe", name: "Cafétéria", label: "Cafétéria", color: 0x8a5a3c },
@@ -43,6 +48,7 @@ const HOME_OFFSETS: Record<number, readonly number[]> = {
   2: [-1.2, 1.2],
   3: [-2.3, 0, 2.3],
   4: [-3.45, -1.15, 1.15, 3.45],
+  5: [-3.6, -1.8, 0, 1.8, 3.6],
 };
 
 export function deptIndex(key: DeptKey): number {
@@ -55,6 +61,13 @@ export function getDept(key: DeptKey): Dept {
 
 export function cssColor(color: number): string {
   return `#${color.toString(16).padStart(6, "0")}`;
+}
+
+/** Couleur des rôles du village, hors quartier. */
+export const VILLAGE_COLOR = 0xc21b17;
+
+export function agentColor(agent: { dept: DeptKey | null }): number {
+  return agent.dept ? getDept(agent.dept).color : VILLAGE_COLOR;
 }
 
 export function islandAngle(key: DeptKey): number {
@@ -143,6 +156,12 @@ export function cafeSpot(agentIndex: number): Spot {
     node: doorNodeId("cafe"),
   };
 }
+
+/** Point de la Direction où un livrable attend la décision de Vincent, qui n'est pas dans le quartier. */
+export const VALIDATION_SPOT: Spot = {
+  ...islandPoint("direction", HOME_DIST, 0),
+  node: doorNodeId("direction"),
+};
 
 /** À côté du destinataire, du côté de l'expéditeur. */
 export function beside(dest: Spot, sender: Vec2): Spot {

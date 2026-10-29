@@ -11,6 +11,7 @@ import type {
   AgentId,
   AgentLive,
   DeepReadonly,
+  DeptKey,
   LiveState,
   NoteState,
   Speed,
@@ -22,6 +23,7 @@ import type {
 import {
   NAV_ADJ,
   NAV_POS,
+  VALIDATION_SPOT,
   WALK_SPEED,
   beside,
   brainSpot,
@@ -69,8 +71,15 @@ function fileName(path: string): string {
   return path.slice(path.lastIndexOf("/") + 1);
 }
 
+function quartierDept(id: AgentId): DeptKey {
+  const dept = getAgent(id).dept;
+  if (!dept) throw new Error(`${id} n'appartient à aucun quartier.`);
+  return dept;
+}
+
 function homeSpotOf(id: AgentId): Spot {
   const dept = getAgent(id).dept;
+  if (!dept) return VALIDATION_SPOT;
   const mates = AGENTS.filter((a) => a.dept === dept);
   return homeSpot(
     dept,
@@ -115,7 +124,7 @@ export class Simulation {
       brain: { pulse: 0, cardIndex: 0, cardGlow: 0 },
       particles: [],
     };
-    this.live.agents.camille.bubble = { text: READY_BUBBLE, until: null };
+    this.live.agents.adeline.bubble = { text: READY_BUBBLE, until: null };
     this.ui = {
       phase: "idle",
       status: READY_STATUS,
@@ -172,7 +181,7 @@ export class Simulation {
       this.live.agents[who].bubble = null;
       void this.goTo(who, r.home);
     }
-    this.live.agents.camille.bubble = null;
+    this.live.agents.adeline.bubble = null;
     this.runStart = this.live.simT;
     this.setUi({
       phase: "running",
@@ -208,7 +217,7 @@ export class Simulation {
       mover?.resolve(false);
       this.live.agents[a.id] = this.restingAgent(a.id);
     }
-    this.live.agents.camille.bubble = { text: READY_BUBBLE, until: null };
+    this.live.agents.adeline.bubble = { text: READY_BUBBLE, until: null };
     this.live.particles = [];
     this.live.brain = { pulse: 0, cardIndex: 0, cardGlow: 0 };
     this.setUi({
@@ -265,7 +274,7 @@ export class Simulation {
 
   private restingAgent(id: AgentId): AgentLive {
     const home = this.rt[id].home;
-    const toBrain = dirToBrain(getAgent(id).dept);
+    const toBrain = dirToBrain(getAgent(id).dept ?? "direction");
     return {
       id,
       x: home.x,
@@ -414,7 +423,7 @@ export class Simulation {
         this.setUi({ status: label, progress: (i + 1) / total });
         await this.exec(id, event, label);
       }
-      this.setBubble("camille", "Livré", 3000);
+      this.setBubble("adeline", "Livré", 3000);
       this.involved = null;
       this.setUi({
         phase: "done",
@@ -457,7 +466,7 @@ export class Simulation {
       case "read":
       case "write": {
         const reading = event.t === "read";
-        await walk(event.who, brainSpot(getAgent(event.who).dept));
+        await walk(event.who, brainSpot(quartierDept(event.who)));
         this.touchNote(event.note);
         this.emitParticles(event.who, reading);
         this.setBubble(
@@ -488,9 +497,9 @@ export class Simulation {
       }
       case "gate": {
         const owner = event.owner;
-        await walk(owner, beside(this.spotOf("vincent"), this.spotOf(owner)));
+        await walk(owner, VALIDATION_SPOT);
         for (;;) {
-          this.setBubble("vincent", "À valider", null);
+          this.setBubble(owner, "À valider par Vincent", null);
           this.setUi({
             phase: "gate",
             status: "En attente de ta validation",
@@ -503,11 +512,10 @@ export class Simulation {
           this.setUi({ status: label });
           if (decision === "ok") {
             this.log("vincent", "valide le livrable.");
-            this.setBubble("vincent", "Validé", 1500);
+            this.setBubble(owner, "Validé par Vincent", 1500);
             break;
           }
           this.log("vincent", "demande une révision.");
-          this.setBubble("vincent", "À revoir", 1500);
           agents[owner].status = "working";
           this.setBubble(owner, "Révision…", 2200);
           this.log(owner, "intègre les retours de Vincent.");

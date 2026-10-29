@@ -57,7 +57,7 @@ export function BriefPanel({ sim, ui }: { sim: Simulation; ui: UiState }) {
             value={brief}
             maxLength={MAX_BRIEF}
             disabled={busy}
-            placeholder="Donne une mission à Camille…"
+            placeholder="Donne une mission à Adeline…"
             onChange={(e) => {
               setBrief(e.target.value);
               setEdited(true);
@@ -73,7 +73,7 @@ export function BriefPanel({ sim, ui }: { sim: Simulation; ui: UiState }) {
         </div>
 
         <div className="flex min-w-0 items-center gap-2 px-2 text-xs text-muted">
-          <p className="min-w-0 truncate max-md:hidden">Camille orchestre l&apos;équipe. Clique sur un personnage pour voir sa fiche.</p>
+          <p className="min-w-0 truncate max-md:hidden">Adeline orchestre l&apos;équipe. Clique sur un personnage pour voir sa fiche.</p>
           <div className="ml-auto flex shrink-0 items-center gap-1" role="group" aria-label="Vitesse de simulation">
             <span aria-hidden="true" className="mr-0.5">
               Vitesse

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { AGENTS } from "@/engine/agents";
+import { QUARTIER_AGENTS } from "@/engine/agents";
 import type { Simulation } from "@/engine/simulation";
 import type { AgentId, DeptKey } from "@/engine/types";
 import { createAgentMesh } from "./agentMesh";
@@ -8,6 +8,7 @@ import { buildBuildings } from "./buildings";
 import { buildClouds } from "./clouds";
 import { buildIslands } from "./islands";
 import { createKit, type Kit } from "./materials";
+import { LIGHTING, type Moment } from "./moments";
 import { createOverlay } from "./overlay";
 
 const ELEVATION = Math.atan(1 / Math.SQRT2);
@@ -27,6 +28,7 @@ export interface SceneOptions {
 
 export interface SceneHandle {
   rotate(direction: 1 | -1): void;
+  setMoment(moment: Moment): void;
   dispose(): void;
 }
 
@@ -40,10 +42,10 @@ function selectionRing(): THREE.Mesh {
   return ring;
 }
 
-function addLights(scene: THREE.Scene): void {
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xaebf9a, 0.82 * LIGHT_SCALE));
-  const sun = new THREE.DirectionalLight(0xffffff, 0.7 * LIGHT_SCALE);
-  sun.position.set(8, 30, 20);
+function addLights(scene: THREE.Scene) {
+  const ambient = new THREE.HemisphereLight();
+  scene.add(ambient);
+  const sun = new THREE.DirectionalLight();
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   const cam = sun.shadow.camera;
@@ -55,11 +57,20 @@ function addLights(scene: THREE.Scene): void {
   cam.far = 120;
   sun.shadow.bias = -0.0007;
   scene.add(sun);
+  return (moment: Moment) => {
+    const l = LIGHTING[moment];
+    ambient.color.setHex(l.sky);
+    ambient.groundColor.setHex(l.ground);
+    ambient.intensity = l.ambient * LIGHT_SCALE;
+    sun.color.setHex(l.sun);
+    sun.intensity = l.sunIntensity * LIGHT_SCALE;
+    sun.position.set(...l.sunPosition);
+  };
 }
 
 function buildAgents(kit: Kit, scene: THREE.Scene) {
   const hitMat = new THREE.MeshBasicMaterial({ visible: false });
-  const meshes = AGENTS.map((a) => {
+  const meshes = QUARTIER_AGENTS.map((a) => {
     const m = createAgentMesh(a, kit, hitMat);
     scene.add(m.group);
     return [a.id, m] as const;
@@ -83,7 +94,8 @@ export function createScene({
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -300, 500);
   const kit = createKit();
-  addLights(scene);
+  const setMoment = addLights(scene);
+  setMoment("jour");
 
   const brain = buildBrain(kit);
   const buildings = buildBuildings(kit);
@@ -168,7 +180,9 @@ export function createScene({
 
     sim.tick(dt);
     const live = sim.getLive();
-    const selected = sim.getUi().selected;
+    const picked = sim.getUi().selected;
+    // Vincent, décideur du village, n'a pas de personnage dans le quartier.
+    const selected = picked && agents.has(picked) ? picked : null;
 
     azimuth = reduced
       ? targetAzimuth
@@ -176,7 +190,7 @@ export function createScene({
     placeCamera();
 
     working.clear();
-    for (const a of AGENTS) {
+    for (const a of QUARTIER_AGENTS) {
       const state = live.agents[a.id];
       if (state.status === "working") working.add(a.dept);
       agents.get(a.id)?.update(state, dt, elapsed);
@@ -201,6 +215,7 @@ export function createScene({
     rotate(direction) {
       targetAzimuth += (direction * Math.PI) / 2;
     },
+    setMoment,
     dispose() {
       cancelAnimationFrame(frame);
       observer.disconnect();

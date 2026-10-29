@@ -1,11 +1,18 @@
 {
-  "brand": "Village MKD",
+  "brand": "My vill[IA]ge",
   "tagline": "Des agents IA, une validation humaine.",
-  "brief": "Une interface de travail où quinze agents IA avancent sur sept îles spécialisées; une personne garde le dernier mot sur chaque livrable.",
+  "brief": "Un village d'agents IA organisé en quartiers. Dans le quartier Direction MKD, dix-sept agents IA avancent sur sept îles spécialisées ; une personne garde le dernier mot sur chaque livrable du village.",
   "adjectives": ["collaboratif", "clair", "supervisé"],
   "criteria": "Le symbole doit rester lisible en favicon, se reproduire en une couleur et faire sentir le collectif sans masquer la validation humaine.",
   "industry": "software",
-  "mockups": ["website", "app-icon", "favicon-tab", "readme", "terminal", "sticker"],
+  "mockups": [
+    "website",
+    "app-icon",
+    "favicon-tab",
+    "readme",
+    "terminal",
+    "sticker"
+  ],
   "nav": ["Village", "Journal", "Cerveau", "Équipe"],
   "brand_color": "#c21b17",
   "tile_color": "#f3f2f0",
@@ -27,8 +34,9 @@
       "stacked_on_dark": "logo-stacked-white.svg",
       "idea": "Sept équipes convergent vers un losange rouge qui représente le point de validation humain.",
       "rationale": [
-        "Les sept nœuds reprennent la structure réelle du village.",
+        "Les sept nœuds reprennent les sept îles du premier quartier, Direction MKD.",
         "Le losange rouge conserve l’accent déjà présent dans l’interface.",
+        "Dans le nom, « IA » est évidé dans une touche rouge inclinée de 20° vers la gauche.",
         "Une version simplifiée retire les rayons fins pour les favicons."
       ]
     }

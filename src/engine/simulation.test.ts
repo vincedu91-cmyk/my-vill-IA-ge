@@ -2,8 +2,19 @@ import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import skillsLock from "../../skills-lock.json";
-import { AGENTS, LOCAL_AGENT_SKILLS, agentFile, agentFilePath, agentRules, getAgent } from "./agents";
+import {
+  AGENTS,
+  BASE_NOTES,
+  LOCAL_AGENT_SKILLS,
+  QUARTIER_AGENTS,
+  VILLAGE_AGENTS,
+  agentFile,
+  agentFilePath,
+  agentRules,
+  getAgent,
+} from "./agents";
 import { bfs } from "./path";
+import { mkdNote } from "./quartiers";
 import { SCENARIOS, getScenario, runEvents } from "./scenarios";
 import { Simulation } from "./simulation";
 import type { AgentId, VillageEvent } from "./types";
@@ -12,6 +23,7 @@ import {
   HOME_DIST,
   ISLAND_SIZE,
   NAV_ADJ,
+  VALIDATION_SPOT,
   dirToBrain,
   islandCenter,
 } from "./world";
@@ -52,18 +64,18 @@ const actorOf = (e: VillageEvent): AgentId =>
 
 describe("BFS", () => {
   it("relie deux îles voisines par leurs ponts", () => {
-    expect(bfs(NAV_ADJ, "D:mairie", "D:contenu")).toEqual([
-      "D:mairie",
-      "R:mairie",
+    expect(bfs(NAV_ADJ, "D:direction", "D:contenu")).toEqual([
+      "D:direction",
+      "R:direction",
       "R:contenu",
       "D:contenu",
     ]);
   });
 
   it("prend le côté le plus court de l'anneau", () => {
-    expect(bfs(NAV_ADJ, "D:mairie", "D:conf")).toEqual([
-      "D:mairie",
-      "R:mairie",
+    expect(bfs(NAV_ADJ, "D:direction", "D:conf")).toEqual([
+      "D:direction",
+      "R:direction",
       "R:cafe",
       "R:veille",
       "R:conf",
@@ -72,8 +84,8 @@ describe("BFS", () => {
   });
 
   it("gère départ = arrivée et nœud inaccessible", () => {
-    expect(bfs(NAV_ADJ, "R:dev", "R:dev")).toEqual(["R:dev"]);
-    expect(bfs(NAV_ADJ, "R:dev", "X")).toEqual([]);
+    expect(bfs(NAV_ADJ, "R:design", "R:design")).toEqual(["R:design"]);
+    expect(bfs(NAV_ADJ, "R:design", "X")).toEqual([]);
   });
 });
 
@@ -88,11 +100,11 @@ describe("Monde", () => {
     });
   });
 
-  it("place la Mairie en haut de l'écran", () => {
+  it("place la Direction en haut de l'écran", () => {
     const depth = (key: (typeof DEPTS)[number]["key"]) =>
       islandCenter(key).x + islandCenter(key).z;
     for (const d of DEPTS.slice(1))
-      expect(depth("mairie")).toBeLessThan(depth(d.key));
+      expect(depth("direction")).toBeLessThan(depth(d.key));
   });
 });
 
@@ -101,7 +113,7 @@ describe("Positions d'attente", () => {
 
   it("sont à 2.2 du centre de l'île, côté Cerveau, et distinctes", () => {
     const seen = new Set<string>();
-    for (const agent of AGENTS) {
+    for (const agent of QUARTIER_AGENTS) {
       const home = sim.homeOf(agent.id);
       const c = islandCenter(agent.dept);
       const d = dirToBrain(agent.dept);
@@ -110,50 +122,70 @@ describe("Positions d'attente", () => {
       expect(home.node).toBe(`D:${agent.dept}`);
       seen.add(`${home.x.toFixed(3)},${home.z.toFixed(3)}`);
     }
-    expect(seen.size).toBe(AGENTS.length);
+    expect(seen.size).toBe(QUARTIER_AGENTS.length);
+  });
+
+  it("place Vincent hors du quartier, au point de validation", () => {
+    expect(VILLAGE_AGENTS.map((a) => a.id)).toEqual(["vincent"]);
+    expect(QUARTIER_AGENTS.some((a) => a.id === "vincent")).toBe(false);
+    expect(sim.homeOf("vincent")).toEqual(VALIDATION_SPOT);
   });
 
   it("décale les agents en tangente selon leur nombre", () => {
     const offset = (id: AgentId) => {
       const agent = getAgent(id);
+      const dept = agent.dept ?? "direction";
       const home = sim.homeOf(id);
-      const c = islandCenter(agent.dept);
-      const d = dirToBrain(agent.dept);
+      const c = islandCenter(dept);
+      const d = dirToBrain(dept);
       return (home.x - c.x) * -d.z + (home.z - c.z) * d.x;
     };
-    expect(offset("camille")).toBeCloseTo(-2.3, 6);
-    expect(offset("vincent")).toBeCloseTo(0, 6);
-    expect(offset("nina")).toBeCloseTo(2.3, 6);
-    expect(["lea", "hugo", "ines"].map((id) => offset(id as AgentId))).toEqual([
+    expect(offset("adeline")).toBeCloseTo(-1.2, 6);
+    expect(offset("nina")).toBeCloseTo(1.2, 6);
+    expect(
+      ["juliette", "hugo", "ines"].map((id) => offset(id as AgentId)),
+    ).toEqual([
       expect.closeTo(-2.3, 6),
       expect.closeTo(0, 6),
       expect.closeTo(2.3, 6),
     ]);
-    expect(["theo", "adrien", "lola", "sacha"].map((id) => offset(id as AgentId))).toEqual([
-      expect.closeTo(-3.45, 6),
-      expect.closeTo(-1.15, 6),
-      expect.closeTo(1.15, 6),
-      expect.closeTo(3.45, 6),
+    expect(
+      ["theo", "adrien", "lola", "sacha", "marie"].map((id) =>
+        offset(id as AgentId),
+      ),
+    ).toEqual([
+      expect.closeTo(-3.6, 6),
+      expect.closeTo(-1.8, 6),
+      expect.closeTo(0, 6),
+      expect.closeTo(1.8, 6),
+      expect.closeTo(3.6, 6),
     ]);
   });
 });
 
 describe("Fichier agent", () => {
   it("génère un slug sans accents et le front matter attendu", () => {
-    const lea = getAgent("lea");
-    expect(agentFilePath(lea)).toBe(
-      ".claude/agents/lea-responsable-contenu.md",
+    const juliette = getAgent("juliette");
+    expect(agentFilePath(juliette)).toBe(
+      ".claude/agents/juliette-responsable-contenu.md",
     );
-    expect(agentFile(lea)).toContain(
+    expect(agentFile(juliette)).toContain(
       'description: "Responsable contenu du département « Atelier Contenu ».',
     );
-    expect(agentFile(lea)).toContain("tools: Read, Write, Grep");
-    expect(agentFile(lea)).toContain("  - content-strategy");
-    expect(agentFile(lea)).toContain("## Règles");
+    expect(agentFile(juliette)).toContain("tools: Read, Write, Grep");
+    expect(agentFile(juliette)).toContain("  - content-strategy");
+    expect(agentFile(juliette)).toContain("## Règles");
+    expect(agentFilePath(getAgent("francois"))).toBe(
+      ".claude/agents/francois-responsable-veille-et-analyse.md",
+    );
   });
 
   it("attribue à chaque agent des compétences installées et spécialisées", () => {
-    expect(AGENTS.filter((agent) => agent.specialties.length === 0).every((agent) => agent.skills.length > 0)).toBe(true);
+    expect(
+      AGENTS.filter((agent) => agent.specialties.length === 0).every(
+        (agent) => agent.skills.length > 0,
+      ),
+    ).toBe(true);
     expect(getAgent("nina").skills).toEqual([
       "ads",
       "analytics",
@@ -164,9 +196,9 @@ describe("Fichier agent", () => {
     ]);
   });
 
-  it("ajoute Adrien à Forge Dev et affiche ses expertises dans sa fiche", () => {
+  it("ajoute Adrien au Design d'Expériences et affiche ses expertises dans sa fiche", () => {
     const adrien = getAgent("adrien");
-    expect(adrien.dept).toBe("dev");
+    expect(adrien.dept).toBe("design");
     expect(adrien.manager).toBe(false);
     expect(adrien.tools).toEqual(["Read", "Write", "Edit", "Bash"]);
     expect(adrien.specialties.map(({ skill }) => skill)).toEqual([
@@ -181,58 +213,123 @@ describe("Fichier agent", () => {
       ".claude/agents/adrien-developpeur-senior-backend-fullstack-ssr.md",
     );
     expect(agentFile(adrien)).toContain("  - php-symfony-backend");
-    expect(agentFile(adrien)).toContain(".agents/skills/automated-testing/SKILL.md");
+    expect(agentFile(adrien)).toContain(
+      ".agents/skills/automated-testing/SKILL.md",
+    );
   });
 
-  it("relie Taste à Lola et Noé et conserve logo-design pour Noé", () => {
-    for (const id of ["lola", "noe"] as const) {
+  it("relie Taste à Lola et Virginie et conserve logo-design pour Virginie", () => {
+    for (const id of ["lola", "virginie"] as const) {
       const agent = getAgent(id);
       expect(agent.skills).toContain("design-taste-frontend");
       expect(agentFile(agent)).toContain("  - design-taste-frontend");
     }
-    expect(getAgent("noe").skills).toContain("logo-design");
-    expect(skillsLock.skills["design-taste-frontend"].source).toBe("Leonxlnx/taste-skill");
-    expect(skillsLock.skills["logo-design"].source).toBe("kaankiziltug/logo-design-skill");
+    expect(getAgent("virginie").skills).toContain("logo-design");
+    expect(skillsLock.skills["design-taste-frontend"].source).toBe(
+      "Leonxlnx/taste-skill",
+    );
+    expect(skillsLock.skills["logo-design"].source).toBe(
+      "kaankiziltug/logo-design-skill",
+    );
   });
 
   it("référence des compétences installées avec leur nom officiel", () => {
-    const installed = new Set([...Object.keys(skillsLock.skills), ...LOCAL_AGENT_SKILLS]);
+    const installed = new Set([
+      ...Object.keys(skillsLock.skills),
+      ...LOCAL_AGENT_SKILLS,
+    ]);
     const assigned = new Set(AGENTS.flatMap((agent) => agent.skills));
     for (const skill of assigned) {
       expect(installed.has(skill), skill).toBe(true);
       const path = resolve(".agents", "skills", skill, "SKILL.md");
       expect(existsSync(path), path).toBe(true);
-      expect(readFileSync(path, "utf8")).toMatch(new RegExp(`^name: ${skill}\\r?$`, "m"));
+      expect(readFileSync(path, "utf8")).toMatch(
+        new RegExp(`^name: ${skill}\\r?$`, "m"),
+      );
     }
     for (const { skill } of AGENTS.flatMap((agent) => agent.specialties)) {
       const path = resolve(".agents", "skills", skill, "SKILL.md");
       expect(existsSync(path), path).toBe(true);
-      expect(readFileSync(path, "utf8")).toMatch(new RegExp(`^name: ${skill}\\r?$`, "m"));
+      expect(readFileSync(path, "utf8")).toMatch(
+        new RegExp(`^name: ${skill}\\r?$`, "m"),
+      );
     }
   });
 
   it("synchronise toutes les fiches, règles, outils et compétences du catalogue", () => {
-    const files = readdirSync(resolve(".claude", "agents")).filter((file) => file.endsWith(".md"));
-    expect(files.sort()).toEqual(AGENTS.map((agent) => agentFilePath(agent).split("/").at(-1)).sort());
+    const files = readdirSync(resolve(".claude", "agents")).filter((file) =>
+      file.endsWith(".md"),
+    );
+    expect(files.sort()).toEqual(
+      AGENTS.map((agent) => agentFilePath(agent).split("/").at(-1)).sort(),
+    );
     for (const agent of AGENTS) {
-      const source = readFileSync(resolve(agentFilePath(agent)), "utf8").replace(/\r\n/g, "\n");
+      const source = readFileSync(
+        resolve(agentFilePath(agent)),
+        "utf8",
+      ).replace(/\r\n/g, "\n");
       expect(agentFile(agent), agent.id).toBe(source);
       expect(agentRules(agent).length, agent.id).toBeGreaterThan(0);
       const frontmatter = source.split("\n---\n")[0];
-      const declared = [...frontmatter.matchAll(/^  - ([\w-]+)$/gm)].map((match) => match[1]);
-      expect(declared, agent.id).toEqual([...agent.skills, ...agent.specialties.map(({ skill }) => skill)]);
-      expect(frontmatter).toContain(`tools:${agent.tools.length ? ` ${agent.tools.join(", ")}` : ""}\n`);
+      const declared = [...frontmatter.matchAll(/^  - ([\w-]+)$/gm)].map(
+        (match) => match[1],
+      );
+      expect(declared, agent.id).toEqual([
+        ...agent.skills,
+        ...agent.specialties.map(({ skill }) => skill),
+      ]);
+      expect(frontmatter).toContain(
+        `tools:${agent.tools.length ? ` ${agent.tools.join(", ")}` : ""}\n`,
+      );
     }
   });
 
-  it("conserve les frontières de Forge Dev et les validations humaines", () => {
+  it("conserve les frontières du Design d'Expériences et les validations humaines", () => {
     const rules = agentRules(getAgent("adrien")).join("\n");
-    for (const expected of ["gestion d’équipe", "architecture globale", "frontend", "Théo", "Sacha", "tu ne valides pas toi-même ta PR"]) {
+    for (const expected of [
+      "gestion d’équipe",
+      "architecture globale",
+      "frontend",
+      "Théo",
+      "Sacha",
+      "tu ne valides pas toi-même ta PR",
+    ]) {
       expect(rules).toContain(expected);
     }
-    expect(agentRules(getAgent("theo")).join("\n")).toContain("validation technique finale");
+    expect(agentRules(getAgent("theo")).join("\n")).toContain(
+      "validation technique finale",
+    );
     expect(agentRules(getAgent("lola")).join("\n")).toContain("Adrien");
-    expect(agentRules(getAgent("sacha")).join("\n")).toContain("l'accord humain");
+    expect(agentRules(getAgent("sacha")).join("\n")).toContain(
+      "l'accord humain",
+    );
+  });
+});
+
+describe("Cerveau", () => {
+  it("référence des notes existantes du quartier et du village", () => {
+    for (const note of BASE_NOTES) {
+      expect(note).toMatch(/^(village|quartiers\/direction-mkd)\//);
+      expect(existsSync(resolve("brain", note)), note).toBe(true);
+    }
+    const reads = SCENARIOS.flatMap((s) => s.steps).flatMap((e) =>
+      e.t === "read" ? [e.note] : [],
+    );
+    for (const note of reads) expect(BASE_NOTES, note).toContain(note);
+  });
+
+  it("ne cite dans les fiches que des notes existantes", () => {
+    for (const agent of AGENTS) {
+      const cited = [...agentFile(agent).matchAll(/`brain\/([^`]+\.md)`/g)].map(
+        (m) => m[1],
+      );
+      expect(cited.length, agent.id).toBeGreaterThan(0);
+      for (const note of cited)
+        expect(
+          existsSync(resolve("brain", note)),
+          `${agent.id} : ${note}`,
+        ).toBe(true);
+    }
   });
 });
 
@@ -244,7 +341,9 @@ describe("Gestion GitHub et GitLab", () => {
     expect(theo.mission).toContain("GitHub/GitLab");
     expect(agentFilePath(theo)).toBe(".claude/agents/theo-lead-dev.md");
     expect(agentFile(theo)).toContain("  - github-gitlab-management");
-    expect(agentFile(theo)).toContain(".agents/skills/github-gitlab-management/SKILL.md");
+    expect(agentFile(theo)).toContain(
+      ".agents/skills/github-gitlab-management/SKILL.md",
+    );
     expect(LOCAL_AGENT_SKILLS).toContain("github-gitlab-management");
   });
 });
@@ -266,14 +365,14 @@ describe("Scénarios", () => {
       const events = runEvents(s, date);
       expect(events.at(-2)).toEqual({
         t: "gate",
-        owner: "camille",
+        owner: "adeline",
         title: s.gate[0],
         text: s.gate[1],
       });
       expect(events.at(-1)).toEqual({
         t: "write",
-        who: "camille",
-        note: `journal/2026-10-25-${s.slug}.md`,
+        who: "adeline",
+        note: mkdNote(`journal/2026-10-25-${s.slug}.md`),
       });
     }
   });
@@ -285,25 +384,35 @@ describe("Scénarios", () => {
       const scenario = getScenario(key);
       sim.launch(key, scenario.brief);
       const gates = [
-        ...scenario.steps.filter((step) => step.t === "gate").map((step) => step.title),
+        ...scenario.steps
+          .filter((step) => step.t === "gate")
+          .map((step) => step.title),
         scenario.gate[0],
       ];
       for (const title of gates) {
-        await advanceUntil(sim, () => sim.getUi().phase === "gate" && sim.getUi().gate?.title === title);
+        await advanceUntil(
+          sim,
+          () =>
+            sim.getUi().phase === "gate" && sim.getUi().gate?.title === title,
+        );
         sim.approve();
       }
       await advanceUntil(sim, () => sim.getUi().phase === "done");
 
       const ui = sim.getUi();
-      const expected = [...scenario.steps.map(actorOf), "vincent", "camille"];
+      const expected = [...scenario.steps.map(actorOf), "vincent", "adeline"];
       expect(ui.log.map((l) => l.who)).toEqual(expected);
       expect(ui.progress).toBe(1);
       expect(ui.status).toBe("Terminé");
       expect(ui.deliverables?.files).toEqual(scenario.files);
-      const journal = ui.notes.find((n) => n.path.startsWith("journal/"));
+      const journal = ui.notes.find((n) =>
+        n.path.startsWith(mkdNote("journal/")),
+      );
       expect(journal).toMatchObject({ isNew: true, reads: 1 });
       expect(journal?.path).toMatch(
-        new RegExp(`^journal/\\d{4}-\\d{2}-\\d{2}-${scenario.slug}\\.md$`),
+        new RegExp(
+          `^quartiers/direction-mkd/journal/\\d{4}-\\d{2}-\\d{2}-${scenario.slug}\\.md$`,
+        ),
       );
     },
   );
@@ -323,7 +432,10 @@ describe("Création de logo", () => {
     await advanceUntil(sim, () => sim.getUi().phase === "gate");
     expect(sim.getUi().gate?.title).toBe("Concepts logo à valider");
     sim.approve();
-    await advanceUntil(sim, () => sim.getUi().gate?.title === getScenario("logo").gate[0]);
+    await advanceUntil(
+      sim,
+      () => sim.getUi().gate?.title === getScenario("logo").gate[0],
+    );
     expect(sim.getUi().deliverables).toBeNull();
     sim.approve();
     await advanceUntil(sim, () => sim.getUi().phase === "done");
@@ -380,7 +492,7 @@ describe("Annulation", () => {
         false,
       ]);
     }
-    expect(live.agents.camille.bubble).toEqual({
+    expect(live.agents.adeline.bubble).toEqual({
       text: "Prête pour un brief",
       until: null,
     });
@@ -390,7 +502,7 @@ describe("Annulation", () => {
     expect(ui.phase).toBe("idle");
     expect(ui.log).toEqual([]);
     expect(ui.notes.every((n) => n.reads === 0 && !n.isNew)).toBe(true);
-    expect(live.agents.camille.status).toBe("idle");
+    expect(live.agents.adeline.status).toBe("idle");
   });
 
   it("libère la validation en attente", async () => {
@@ -429,12 +541,12 @@ describe("Pause café", () => {
       const home = sim.homeOf(id);
       return a.x !== home.x || a.z !== home.z;
     };
-    // Avec random = 0, le premier candidat est Léa, impliquée dans le carrousel.
-    await advanceUntil(sim, () => isOut("lea"), 30);
+    // Avec random = 0, le premier candidat est Juliette, impliquée dans le carrousel.
+    await advanceUntil(sim, () => isOut("juliette"), 30);
     sim.launch("carousel", "Test");
-    expect(sim.getLive().agents.lea.cup).toBe(false);
-    await advanceUntil(sim, () => !isOut("lea"), 30);
+    expect(sim.getLive().agents.juliette.cup).toBe(false);
+    await advanceUntil(sim, () => !isOut("juliette"), 30);
     await advance(sim, 20);
-    expect(sim.getLive().agents.lea.cup).toBe(false);
+    expect(sim.getLive().agents.juliette.cup).toBe(false);
   });
 });

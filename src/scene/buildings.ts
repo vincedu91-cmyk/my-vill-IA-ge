@@ -101,7 +101,7 @@ function house(
   return { group: g, house: { dept, windows, puffs, level: 0 } };
 }
 
-function mairieExtras(
+function directionExtras(
   kit: Kit,
   g: THREE.Group,
 ): THREE.Mesh<THREE.PlaneGeometry> {
@@ -229,7 +229,7 @@ export function buildBuildings(kit: Kit): Buildings {
     const built = house(kit, d.key, d.color);
     const p = islandPoint(d.key, -BUILDING_OFFSET);
     built.group.position.set(p.x, 0, p.z);
-    if (d.key === "mairie") flag = mairieExtras(kit, built.group);
+    if (d.key === "direction") flag = directionExtras(kit, built.group);
     group.add(built.group);
     houses.push(built.house);
   }
